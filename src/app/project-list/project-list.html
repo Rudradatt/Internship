@@ -1,0 +1,164 @@
+<!-- <div class="container mt-4">
+  <div class="row align-items-center mb-3">
+    <div class="col-md-6">
+      <h2 class="fw-bold text-dark">Project Management</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-success fw-semibold shadow-sm" (click)="onCreate()">
+        + Create New Project
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive shadow-sm border rounded">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="ps-3">Project Name</th>
+              <th scope="col">Domain</th>
+              <th scope="col">Created By</th>
+              <th scope="col">Timeline</th>
+              <th scope="col">Tech Stack</th>
+              <th scope="col" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let project of projects">
+              <td class="ps-3 fw-bold">{{ project.projectName }}</td>
+              <td>{{ project.domain }}</td>
+              <td>{{ project.serviceManager }}</td>
+              <td>
+                <small class="d-block text-muted">
+                  {{ project.startDate }} to {{ project.endDate }}
+                </small>
+              </td>
+              <td>
+                <span *ngFor="let skill of project.selectedSkills" 
+                      class="badge bg-secondary me-1">
+                  {{ skill }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-sm btn-outline-primary" (click)="onView(project)">
+                    View
+                  </button>
+                  <button class="btn btn-sm btn-outline-warning text-dark" (click)="onEdit(project)">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="onDelete(project.id)">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="projects.length === 0">
+              <td colspan="6" class="text-center py-4 text-muted">
+                No data available. Click "Create New Project" to add entries.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="container mt-4">
+  <div class="row align-items-center mb-4 g-3">
+    <div class="col-md-4">
+      <h2 class="fw-bold m-0">Projects</h2>
+    </div>
+    
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          🔍
+        </span>
+        <input type="text" class="form-control border-start-0 shadow-none" 
+               placeholder="Search by name or domain..." 
+               [(ngModel)]="searchTerm" (input)="currentPage = 1">
+      </div>
+    </div>
+
+    <div class="col-md-3 text-end">
+  <button class="btn btn-success shadow-sm fw-bold" (click)="handleCreate()">
+    + Create New Project
+  </button>
+</div>
+
+
+
+  <div class="table-responsive shadow-sm border rounded bg-white">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Project Name</th>
+          <th>Domain</th>
+          <th>Created By</th>
+          <th>Service Manager</th>
+          <th>Project Timeline</th>
+          <th>Tech Stack</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of paginatedProjects">
+          <td class="fw-bold">{{ project.projectName }}</td>
+          <td>{{ project.domain }}</td>
+          <td></td>
+          <td>{{ project.serviceManager }}</td>
+          <td>
+      <div class="small">
+        <span class="text-muted">From:</span> {{ project.startDate | date:'mediumDate' }}
+      </div>
+      <div class="small">
+        <span class="text-muted">To:</span> {{ project.endDate | date:'mediumDate' }}
+      </div>
+    </td>
+
+    
+          <td>
+            <span *ngFor="let skill of project.selectedSkills" class="badge bg-secondary me-1">
+              {{ skill }}
+            </span>
+          </td>
+          <td>
+<div class="d-flex justify-content-center gap-2">
+  <button class="btn btn-sm btn-outline-primary" (click)="handleView(project)">View</button>
+  <button class="btn btn-sm btn-outline-warning text-dark" (click)="handleEdit(project)">Edit</button>
+  <button class="btn btn-sm btn-outline-danger" (click)="onDelete(project.id)">Delete</button>
+</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <small class="text-muted">
+      Showing {{ paginatedProjects.length }} of {{ filteredProjects.length }} projects
+    </small>
+
+    <nav *ngIf="totalPages > 1">
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="changePage(currentPage - 1)">Previous</button>
+        </li>
+        
+        <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" 
+            [class.active]="currentPage === i + 1">
+          <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="changePage(currentPage + 1)">Next</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

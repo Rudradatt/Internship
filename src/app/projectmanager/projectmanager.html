@@ -1,0 +1,18 @@
+<div class="container py-4">
+  <ng-container *ngIf="viewMode === 'list'">
+    <app-project-list 
+      (onCreate)="openCreate()" 
+      (onEdit)="openEdit($event)" 
+      (onView)="openView($event)">
+    </app-project-list>
+  </ng-container>
+
+  <ng-container *ngIf="viewMode === 'form'">
+    <app-project-form 
+      [editProjectData]="selectedProject" 
+      [isReadOnly]="isReadOnly"
+      (onCancel)="goBackToList()"> 
+    </app-project-form>
+  </ng-container>
+</div>
+

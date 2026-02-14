@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
@@ -14,6 +14,11 @@ export class ProjectForm implements OnInit {
 
   @Input() editProjectData: any = null;
   @Input() isReadOnly: boolean = false;
+  @Output() onCancel = new EventEmitter<void>();
+
+cancelForm() {
+  this.onCancel.emit();
+}
 
   isEditMode = false;
   selectedSkills: string[] = [];

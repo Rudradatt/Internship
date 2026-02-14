@@ -160,15 +160,16 @@
         </div>
       </div>
 
-      <div class="col-12 d-flex justify-content-center mt-4">
-        <button *ngIf="!isReadOnly" type="submit" class="btn btn-primary px-5" [disabled]="projectForm.invalid">
-          {{ isEditMode ? 'Update Project' : 'Submit Project' }}
-        </button>
-
-        <button *ngIf="isReadOnly" type="button" class="btn btn-secondary px-5" (click)="isDropdownOpen = false">
-          Back to List
-        </button>
-      </div>
+      <div class="col-12 d-flex justify-content-center gap-3 mt-4">
+  <button type="button" class="btn btn-secondary px-5" (click)="cancelForm()">
+    {{ isReadOnly ? 'Back to List' : 'Cancel' }}
+  </button>
+  
+  <button *ngIf="!isReadOnly" type="submit" class="btn btn-primary px-5" [disabled]="projectForm.invalid">
+    {{ isEditMode ? 'Update Project' : 'Submit Project' }}
+  </button>
+</div>
+    
 
     </div>
   </form>

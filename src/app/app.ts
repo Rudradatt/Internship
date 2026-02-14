@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ProjectForm } from './project-form/project-form';
+import { Projectmanager } from './projectmanager/projectmanager';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,ProjectForm],
+  imports: [RouterOutlet,Projectmanager],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
