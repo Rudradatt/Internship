@@ -11,25 +11,25 @@ import { Projectservice, ProjectDto } from '../projectservice';
   styleUrl: './project-list.css',
 })
 export class ProjectList implements OnInit {
-  // 1. Define the Emitters (Outputs)
+ 
   @Output() onCreate = new EventEmitter<void>();
   @Output() onEdit = new EventEmitter<any>();
   @Output() onView = new EventEmitter<any>();
 
-  // 2. Define the Handlers (Renamed to avoid Duplicate Identifier error)
+ 
   handleCreate() { 
     this.onCreate.emit(); 
   }
 
-  handleEdit(p: any) { 
+  handleEdit(p: ProjectDto) { 
     this.onEdit.emit(p); 
   }
 
-  handleView(p: any) { 
+  handleView(p: ProjectDto) { 
     this.onView.emit(p); 
   }
 
-  // Search and Pagination properties
+
   searchTerm: string = '';
   currentPage: number = 1;
   pageSize: number = 5;
@@ -44,7 +44,7 @@ export class ProjectList implements OnInit {
   onDelete(id: number) {
     if (confirm('Are you sure?')) {
       this.projectService.deleteProject(id).subscribe(() => {
-        this.loadProjects(); // Refresh the list after delete
+        this.loadProjects();
       });
     }
   }
@@ -56,7 +56,7 @@ export class ProjectList implements OnInit {
     });
   }
 
-  // Logic remains for Delete, Filtering, and Pagination
+
   
 
   get filteredProjects() {
@@ -76,7 +76,12 @@ export class ProjectList implements OnInit {
   }
 
   get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+    pages.push(i);
+    }
+    return pages;
+
   }
 
   changePage(page: number) {

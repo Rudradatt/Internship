@@ -1,15 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-  ValidatorFn
-} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Projectservice, ProjectDto } from '../projectservice';
-
 @Component({
   selector: 'app-project-form',
   standalone: true,
@@ -82,7 +74,7 @@ export class ProjectForm implements OnInit {
       endDate: data.endDate,
     });
 
-    this.selectedSkills = [...(data.selectedSkills || [])];
+    this.selectedSkills = (data.selectedSkills || []).slice();
   }
 
   futureDateValidator(): ValidatorFn {

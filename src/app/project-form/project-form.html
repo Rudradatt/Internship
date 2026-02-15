@@ -6,36 +6,42 @@
   </div>
 
   <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-    <div class="row g-4">
+    <div class="d-flex flex-column gap-3">
       
-      <div class="col-md-12">
-        <label class="form-label">Domain</label>
-        <select class="form-select form-select-sm w-25" formControlName="domain">
-          <option value="" disabled selected>Select Domain</option>
-          <option>Legacy Modernization</option>
-          <option>Web</option>
-          <option>AI / ML Projects</option>
-          <option>eCommerce</option>
-        </select>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Domain</label>
+          <select class="form-select form-select-sm w-25" formControlName="domain">
+            <option value="" disabled selected>Select Domain</option>
+            <option>Legacy Modernization</option>
+            <option>Web</option>
+            <option>AI / ML Projects</option>
+            <option>eCommerce</option>
+          </select>
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Project Name</label>
-        <input type="text" class="form-control form-control-sm w-50" 
-               formControlName="projectName" placeholder="Enter Project Name" 
-               [class.is-invalid]="(projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('projectName')?.hasError('required')">Project Name required.</div>       
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Project Name</label>
+          <input type="text" class="form-control form-control-sm w-50" 
+                 formControlName="projectName" placeholder="Enter Project Name" 
+                 [class.is-invalid]="(projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched)">
+          <div class="invalid-feedback" *ngIf="projectForm.get('projectName')?.hasError('required')">Project Name required.</div>       
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Project Short Name</label>
-        <input type="text" class="form-control form-control-sm w-25" formControlName="projectShortName">
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Project Short Name</label>
+          <input type="text" class="form-control form-control-sm w-25" formControlName="projectShortName">
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Project Type</label>
-        <div class="input-group input-group-sm w-25">
-          <select class="form-select" formControlName="projectType">
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Project Type</label>
+          <select class="form-select form-select-sm w-25" formControlName="projectType">
             <option value="Annuity">Annuity</option>
             <option value="Fixed Rate">Fixed Rate</option>
             <option value="Time and Material">Time and Material</option>
@@ -43,138 +49,150 @@
         </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Client Name</label>
-        <input type="text" class="form-control form-control-sm w-25" list="clientOptions" 
-               formControlName="clientName" [class.is-invalid]="(projectForm.get('clientName')?.invalid && projectForm.get('clientName')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('clientName')?.hasError('required')">Client Name required.</div>       
-        <datalist id="clientOptions">
-           <option value="PMC"></option>
-           <option value="AntManIntegration"></option>
-           <option value="AmazonWR"></option>
-           <Option value="Galaxy"></Option>
-           <Option value="Flipkart - Data Engineering"></Option>
-           <Option value="IronMan"></Option>
-           <Option value="Flash"></Option>
-           <Option value="Hulk"></Option>
-           <Option value="Captain"></Option>
-           <Option value="Emirates"></Option>
-           <Option value="AmazonAnnuity"></Option>
-           <Option value="AmazonWR-157(B)CO1"></Option>
-           <Option value="Myntra"></Option>
-           <Option value="Alembic"></Option>
-           <Option value="Mobile"></Option>
-           <Option value="Myntradot net"></Option>
-           <Option value="Black"></Option>
-           <Option value="Joey"></Option>
-           </datalist>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Delivery Lead</label>
-        <input type="text" class="form-control form-control-sm w-25" list="leadOptions" 
-               formControlName="deliveryLead" [class.is-invalid]="(projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('deliveryLead')?.hasError('required')">Delivery Lead Name required.</div>       
-        <datalist id="leadOptions">
-          <option value="Rudradatt"></option>
-          <option value="Devendra"></option>
-          <option value="Bhavi"></option>
-          <option value="Rishab"></option>
-          <option value="Ankit"></option>
-          <option value="Mohit"></option>
-          <option value="Yug"></option>
-          <option value="Nkaul"></option>
-          <option value="Tanmay"></option>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Client Name</label>
+          <input type="text" class="form-control form-control-sm w-25" list="clientOptions" 
+                 formControlName="clientName" [class.is-invalid]="(projectForm.get('clientName')?.invalid && projectForm.get('clientName')?.touched)">
+          <div class="invalid-feedback" *ngIf="projectForm.get('clientName')?.hasError('required')">Client Name required.</div>       
+          <datalist id="clientOptions">
+             <option value="PMC"></option>
+             <option value="AntManIntegration"></option>
+             <option value="AmazonWR"></option>
+             <option value="Galaxy"></option>
+             <option value="Flipkart - Data Engineering"></option>
+             <option value="IronMan"></option>
+             <option value="Flash"></option>
+             <option value="Hulk"></option>
+             <option value="Captain"></option>
+             <option value="Emirates"></option>
+             <option value="AmazonAnnuity"></option>
+             <option value="AmazonWR-157(B)CO1"></option>
+             <option value="Myntra"></option>
+             <option value="Alembic"></option>
+             <option value="Mobile"></option>
+             <option value="Myntradot net"></option>
+             <option value="Black"></option>
+             <option value="Joey"></option>
           </datalist>
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Service Manager</label>
-        <input type="text" class="form-control form-control-sm w-25" list="managerOptions" 
-               formControlName="serviceManager" [class.is-invalid]="(projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('serviceManager')?.hasError('required')">Service Manager Name required.</div>      
-        <datalist id="managerOptions">
-          <option value="Rudradatt"></option>
-          <option value="Devendra"></option>
-          <option value="Bhavi"></option>
-          <option value="Rishab"></option>
-          <option value="Ankit"></option>
-          <option value="Mohit"></option>
-          <option value="Yug"></option>
-          <option value="Nkaul"></option>
-          <option value="Tanmay"></option>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Delivery Lead</label>
+          <input type="text" class="form-control form-control-sm w-25" list="leadOptions" 
+                 formControlName="deliveryLead" [class.is-invalid]="(projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched)">
+          <div class="invalid-feedback" *ngIf="projectForm.get('deliveryLead')?.hasError('required')">Delivery Lead Name required.</div>       
+          <datalist id="leadOptions">
+            <option value="Rudradatt"></option>
+            <option value="Devendra"></option>
+            <option value="Bhavi"></option>
+            <option value="Rishab"></option>
+            <option value="Ankit"></option>
+            <option value="Mohit"></option>
+            <option value="Yug"></option>
+            <option value="Nkaul"></option>
+            <option value="Tanmay"></option>
           </datalist>
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Start Date</label>
-        <input type="date" class="form-control form-control-sm w-25" formControlName="startDate"
-               [class.is-invalid]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
-        <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('required')">Required.</div>
-        <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('pastDate')">Cannot be in the past.</div>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Service Manager</label>
+          <input type="text" class="form-control form-control-sm w-25" list="managerOptions" 
+                 formControlName="serviceManager" [class.is-invalid]="(projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched)">
+          <div class="invalid-feedback" *ngIf="projectForm.get('serviceManager')?.hasError('required')">Service Manager Name required.</div>      
+          <datalist id="managerOptions">
+            <option value="Rudradatt"></option>
+            <option value="Devendra"></option>
+            <option value="Bhavi"></option>
+            <option value="Rishab"></option>
+            <option value="Ankit"></option>
+            <option value="Mohit"></option>
+            <option value="Yug"></option>
+            <option value="Nkaul"></option>
+            <option value="Tanmay"></option>
+          </datalist>
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">End Date</label>
-        <input type="date" class="form-control form-control-sm w-25" formControlName="endDate"
-               [class.is-invalid]="(projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched) || isDateRangeInvalid">
-        <div class="invalid-feedback" *ngIf="projectForm.get('endDate')?.hasError('required')">Required.</div>
-        <div class="text-danger small mt-1" *ngIf="isDateRangeInvalid">End Date must be after Start Date.</div>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Start Date</label>
+          <input type="date" class="form-control form-control-sm w-25" formControlName="startDate"
+                 [class.is-invalid]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
+          <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('required')">Required.</div>
+          <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('pastDate')">Cannot be in the past.</div>
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <label class="form-label">Skills Required</label>
-        <div class="dropdown">
-          <button class="btn btn-outline-primary w-25 d-flex justify-content-between align-items-center"
-                  type="button" 
-                  (click)="toggleDropdown()"
-                  [disabled]="isReadOnly"> <span>Select Skills ({{selectedSkills.length}})</span>
-            <span class="dropdown-toggle" [class.show]="isDropdownOpen"></span>
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">End Date</label>
+          <input type="date" class="form-control form-control-sm w-25" formControlName="endDate"
+                 [class.is-invalid]="(projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched) || isDateRangeInvalid">
+          <div class="invalid-feedback" *ngIf="projectForm.get('endDate')?.hasError('required')">Required.</div>
+          <div class="text-danger small mt-1" *ngIf="isDateRangeInvalid">End Date must be after Start Date.</div>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <label class="form-label d-block">Skills Required</label>
+          <div class="dropdown">
+            <button class="btn btn-outline-primary btn-sm w-25 d-flex justify-content-between align-items-center"
+                    type="button" 
+                    (click)="toggleDropdown()"
+                    [disabled]="isReadOnly"> <span>Select Skills ({{selectedSkills.length}})</span>
+              <span class="dropdown-toggle" [class.show]="isDropdownOpen"></span>
+            </button>
+            
+            <ul class="dropdown-menu p-2 w-25" 
+                [class.show]="isDropdownOpen"
+                [style.display]="isDropdownOpen ? 'block' : 'none'">
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" 
+                         [checked]="isSkillSelected('.NET')" 
+                         (change)="toggleSkill('.NET')"
+                         [disabled]="isReadOnly"> <label class="form-check-label">.NET</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" 
+                         [checked]="isSkillSelected('Angular')" 
+                         (change)="toggleSkill('Angular')"
+                         [disabled]="isReadOnly">
+                  <label class="form-check-label">Angular</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="mt-2">
+            <span *ngFor="let skill of selectedSkills" class="badge bg-primary me-1 mb-1">{{ skill }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 d-flex justify-content-start gap-3 mt-4">
+          <button type="button" class="btn btn-secondary px-5" (click)="cancelForm()">
+            {{ isReadOnly ? 'Back to List' : 'Cancel' }}
           </button>
           
-          <ul class="dropdown-menu p-2 w-25" 
-              [class.show]="isDropdownOpen"
-              [style.display]="isDropdownOpen ? 'block' : 'none'">
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
-                       [checked]="isSkillSelected('.NET')" 
-                       (change)="toggleSkill('.NET')"
-                       [disabled]="isReadOnly"> <label class="form-check-label">.NET</label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
-                       [checked]="isSkillSelected('Angular')" 
-                       (change)="toggleSkill('Angular')"
-                       [disabled]="isReadOnly">
-                <label class="form-check-label">Angular</label>
-              </div>
-            </li>
-            </ul>
-        </div>
-        
-        <div class="mt-2">
-          <span *ngFor="let skill of selectedSkills" class="badge bg-primary me-1 mb-1">{{ skill }}</span>
+          <button *ngIf="!isReadOnly" type="submit" class="btn btn-primary px-5" [disabled]="projectForm.invalid">
+            {{ isEditMode ? 'Update Project' : 'Submit Project' }}
+          </button>
         </div>
       </div>
-
-      <div class="col-12 d-flex justify-content-center gap-3 mt-4">
-  <button type="button" class="btn btn-secondary px-5" (click)="cancelForm()">
-    {{ isReadOnly ? 'Back to List' : 'Cancel' }}
-  </button>
-  
-  <button *ngIf="!isReadOnly" type="submit" class="btn btn-primary px-5" [disabled]="projectForm.invalid">
-    {{ isEditMode ? 'Update Project' : 'Submit Project' }}
-  </button>
-</div>
-    
 
     </div>
   </form>
 </div>
-
 
 <!-- 
 <div class="container p-4">
