@@ -82,7 +82,7 @@
         <div class="col-md-12">
           <label class="form-label d-block">Delivery Lead</label>
           <input type="text" class="form-control form-control-sm w-25" list="leadOptions" 
-                 formControlName="deliveryLead" [class.is-invalid]="(projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched)">
+                 formControlName="deliveryLeadName" [class.is-invalid]="(projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched)">
           <div class="invalid-feedback" *ngIf="projectForm.get('deliveryLead')?.hasError('required')">Delivery Lead Name required.</div>       
           <datalist id="leadOptions">
             <option value="Rudradatt"></option>
@@ -102,7 +102,7 @@
         <div class="col-md-12">
           <label class="form-label d-block">Service Manager</label>
           <input type="text" class="form-control form-control-sm w-25" list="managerOptions" 
-                 formControlName="serviceManager" [class.is-invalid]="(projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched)">
+                 formControlName="serviceManagerName" [class.is-invalid]="(projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched)">
           <div class="invalid-feedback" *ngIf="projectForm.get('serviceManager')?.hasError('required')">Service Manager Name required.</div>      
           <datalist id="managerOptions">
             <option value="Rudradatt"></option>

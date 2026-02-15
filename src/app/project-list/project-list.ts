@@ -35,7 +35,34 @@ export class ProjectList implements OnInit {
   pageSize: number = 5;
 
   constructor(private projectService: Projectservice) {}
-  projects: ProjectDto[] = [];
+  projects: ProjectDto[] = [{
+    id: 1,
+    domain: 'Web',
+    projectName: 'Retail Analytics Platform',
+    projectShortName: 'retail-analytics',
+    projectType: 'Fixed Rate',
+    clientName: 'Amazon',
+    deliveryLeadName: 'Rudradatt',
+    serviceManagerName: 'Devendra',
+    startDate: '2025-02-01',
+    endDate: '2025-08-31',
+    selectedTechStacks: ['Angular', '.NET'],
+    createdById: 101
+  },
+  {
+    id: 2,
+    domain: 'AI / ML Projects',
+    projectName: 'Demand Forecasting',
+    projectShortName: 'demand-forecast',
+    projectType: 'Annuity',
+    clientName: 'Myntra',
+    deliveryLeadName: 'Bhavi',
+    serviceManagerName: 'Mohit',
+    startDate: '2025-03-15',
+    endDate: '2025-12-31',
+    selectedTechStacks: ['Python', 'ML'],
+    createdById: 101
+  }];
 
   ngOnInit() {
     this.loadProjects();

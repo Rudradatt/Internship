@@ -27,15 +27,15 @@ export class ProjectForm implements OnInit {
   ) {
     this.projectForm = this.fb.group(
       {
-        domain: ['', Validators.required],
-        projectName: ['', Validators.required],
-        projectShortName: ['', Validators.required],
-        projectType: ['Annuity', Validators.required],
-        clientName: ['', Validators.required],
-        deliveryLead: ['', Validators.required],
-        serviceManager: ['', Validators.required],
-        startDate: ['', [Validators.required, this.futureDateValidator()]],
-        endDate: ['', Validators.required],
+          domain: ['', Validators.required],
+          projectName: ['', Validators.required],
+          projectShortName: ['', Validators.required],
+          projectType: ['Annuity', Validators.required],
+          clientName: ['', Validators.required],
+          deliveryLeadName: ['', Validators.required],      
+          serviceManagerName: ['', Validators.required],    
+          startDate: ['', [Validators.required, this.noPastDateValidator()]],
+          endDate: ['', Validators.required],
       },
       { validators: this.dateRangeValidator }
     );
@@ -61,23 +61,24 @@ export class ProjectForm implements OnInit {
     return this.isEditMode ? 'Edit Project' : 'Create New Project';
   }
 
-  fillFormForEdit(data: any) {
-    this.projectForm.patchValue({
-      domain: data.domain,
-      projectName: data.projectName,
-      projectShortName: data.projectShortName,
-      projectType: data.projectType,
-      clientName: data.clientName,
-      deliveryLead: data.deliveryLead,
-      serviceManager: data.serviceManager,
-      startDate: data.startDate,
-      endDate: data.endDate,
-    });
+fillFormForEdit(data: ProjectDto) {
+  this.projectForm.patchValue({
+    domain: data.domain,
+    projectName: data.projectName,
+    projectShortName: data.projectShortName,
+    projectType: data.projectType,
+    clientName: data.clientName,
+    deliveryLeadName: data.deliveryLeadName,       // ✅ FIX
+    serviceManagerName: data.serviceManagerName,   // ✅ FIX
+    startDate: data.startDate,
+    endDate: data.endDate,
+  });
 
-    this.selectedSkills = (data.selectedSkills || []).slice();
-  }
+  this.selectedSkills = [...(data.selectedTechStacks || [])];
+}
 
-  futureDateValidator(): ValidatorFn {
+
+  noPastDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value || this.isReadOnly) return null;
       const inputDate = new Date(control.value);
