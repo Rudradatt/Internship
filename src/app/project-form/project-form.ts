@@ -1,55 +1,69 @@
-import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn
+} from '@angular/forms';
+import { Projectservice, ProjectDto } from '../projectservice';
 
 @Component({
   selector: 'app-project-form',
-  standalone: true, // Assuming standalone based on previous context
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './project-form.html',
   styleUrl: './project-form.css',
 })
 export class ProjectForm implements OnInit {
-  private fb = inject(FormBuilder);
 
   @Input() editProjectData: any = null;
   @Input() isReadOnly: boolean = false;
   @Output() onCancel = new EventEmitter<void>();
 
-cancelForm() {
-  this.onCancel.emit();
-}
-
   isEditMode = false;
   selectedSkills: string[] = [];
   isDropdownOpen = false;
 
-  projectForm = this.fb.group({
-    domain: ['', Validators.required],
-    projectName: ['', Validators.required],
-    projectShortName: ['', Validators.required],
-    projectType: ['Annuity', Validators.required],
-    clientName: ['', Validators.required],
-    deliveryLead: ['', Validators.required],
-    serviceManager: ['', Validators.required],
-    startDate: ['', [Validators.required, this.futureDateValidator()]],
-    endDate: ['', Validators.required]
-  }, { validators: this.dateRangeValidator });
+  projectForm!: ReturnType<FormBuilder['group']>;
+
+  constructor(
+    private fb: FormBuilder,
+    private projectService: Projectservice
+  ) {
+    this.projectForm = this.fb.group(
+      {
+        domain: ['', Validators.required],
+        projectName: ['', Validators.required],
+        projectShortName: ['', Validators.required],
+        projectType: ['Annuity', Validators.required],
+        clientName: ['', Validators.required],
+        deliveryLead: ['', Validators.required],
+        serviceManager: ['', Validators.required],
+        startDate: ['', [Validators.required, this.futureDateValidator()]],
+        endDate: ['', Validators.required],
+      },
+      { validators: this.dateRangeValidator }
+    );
+  }
 
   ngOnInit() {
-    // Check if we are in Edit or View mode
     if (this.editProjectData) {
       this.isEditMode = true;
       this.fillFormForEdit(this.editProjectData);
-      
-      // Lock the form if it is Read Only mode
+
       if (this.isReadOnly) {
         this.projectForm.disable();
       }
     }
   }
 
-  // Helper to determine the header title in HTML
+  cancelForm() {
+    this.onCancel.emit();
+  }
+
   get formTitle(): string {
     if (this.isReadOnly) return 'View Project Details';
     return this.isEditMode ? 'Edit Project' : 'Create New Project';
@@ -65,17 +79,15 @@ cancelForm() {
       deliveryLead: data.deliveryLead,
       serviceManager: data.serviceManager,
       startDate: data.startDate,
-      endDate: data.endDate
+      endDate: data.endDate,
     });
 
     this.selectedSkills = [...(data.selectedSkills || [])];
   }
 
-  // --- Validators ---
-
   futureDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value || this.isReadOnly) return null; // Skip validation if read-only
+      if (!control.value || this.isReadOnly) return null;
       const inputDate = new Date(control.value);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -91,11 +103,12 @@ cancelForm() {
   }
 
   get isDateRangeInvalid(): boolean {
-    return this.projectForm.hasError('dateRangeInvalid') &&
-      (this.projectForm.get('endDate')?.touched || this.projectForm.get('endDate')?.dirty) || false;
-  }
-
-  // --- UI Logic ---
+  return Boolean(
+    this.projectForm.hasError('dateRangeInvalid') &&
+    (this.projectForm.get('endDate')?.touched ||
+     this.projectForm.get('endDate')?.dirty)
+  );
+}
 
   toggleDropdown() {
     if (!this.isReadOnly) {
@@ -106,8 +119,9 @@ cancelForm() {
   toggleSkill(skill: string) {
     if (this.isReadOnly) return;
     const index = this.selectedSkills.indexOf(skill);
-    if (index > -1) this.selectedSkills.splice(index, 1);
-    else this.selectedSkills.push(skill);
+    index > -1
+      ? this.selectedSkills.splice(index, 1)
+      : this.selectedSkills.push(skill);
   }
 
   isSkillSelected(skill: string): boolean {
@@ -115,22 +129,39 @@ cancelForm() {
   }
 
   onSubmit() {
-    if (this.projectForm.valid && !this.isReadOnly) {
-      const payload = { 
-        ...this.projectForm.getRawValue(), // getRawValue includes disabled fields if needed
-        selectedSkills: this.selectedSkills 
-      };
-
-      if (this.isEditMode) {
-        console.log('Updating Project:', payload);
-      } else {
-        console.log('Creating Project:', payload);
-      }
-    } else {
+    if (this.projectForm.invalid) {
       this.projectForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.projectForm.getRawValue();
+
+    const payload: ProjectDto = {
+      domain: formValues.domain!,
+      projectName: formValues.projectName!,
+      projectShortName: formValues.projectShortName!,
+      projectType: formValues.projectType!,
+      clientName: formValues.clientName!,
+      deliveryLeadName: formValues.deliveryLead!,
+      serviceManagerName: formValues.serviceManager!,
+      startDate: formValues.startDate!,
+      endDate: formValues.endDate!,
+      selectedTechStacks: this.selectedSkills,
+      createdById: 1,
+    };
+
+    if (this.isEditMode && this.editProjectData?.id) {
+      this.projectService.updateProject(this.editProjectData.id, {
+        ...payload,
+        id: this.editProjectData.id,
+      }).subscribe(() => this.onCancel.emit());
+    } else {
+      this.projectService.createProject(payload)
+        .subscribe(() => this.onCancel.emit());
     }
   }
 }
+
 
 // import { Component, inject, Input, OnInit } from '@angular/core';
 

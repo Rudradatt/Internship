@@ -111,7 +111,7 @@
           <td class="fw-bold">{{ project.projectName }}</td>
           <td>{{ project.domain }}</td>
           <td></td>
-          <td>{{ project.serviceManager }}</td>
+          <td>{{ project.serviceManagerName }}</td>
           <td>
       <div class="small">
         <span class="text-muted">From:</span> {{ project.startDate | date:'mediumDate' }}
@@ -123,7 +123,7 @@
 
     
           <td>
-            <span *ngFor="let skill of project.selectedSkills" class="badge bg-secondary me-1">
+            <span *ngFor="let skill of project.selectedTechStacks" class="badge bg-secondary me-1">
               {{ skill }}
             </span>
           </td>
@@ -131,7 +131,7 @@
 <div class="d-flex justify-content-center gap-2">
   <button class="btn btn-sm btn-outline-primary" (click)="handleView(project)">View</button>
   <button class="btn btn-sm btn-outline-warning text-dark" (click)="handleEdit(project)">Edit</button>
-  <button class="btn btn-sm btn-outline-danger" (click)="onDelete(project.id)">Delete</button>
+  <button class="btn btn-sm btn-outline-danger" (click)="onDelete(project.id!)">Delete</button>
 </div>
           </td>
         </tr>

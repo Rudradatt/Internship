@@ -1,6 +1,7 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Projectservice, ProjectDto } from '../projectservice';
 
 @Component({
   selector: 'app-project-list',
@@ -9,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './project-list.html',
   styleUrl: './project-list.css',
 })
-export class ProjectList {
+export class ProjectList implements OnInit {
   // 1. Define the Emitters (Outputs)
   @Output() onCreate = new EventEmitter<void>();
   @Output() onEdit = new EventEmitter<any>();
@@ -33,87 +34,30 @@ export class ProjectList {
   currentPage: number = 1;
   pageSize: number = 5;
 
-  projects = [
-    {
-      id: 1,
-      projectName: 'Legacy App Migration',
-      domain: 'Legacy Modernization',
-      serviceManager: 'Rudradatt',
-      startDate: '2024-01-01',
-      endDate: '2024-06-01',
-      selectedSkills: ['.NET', 'Angular']
-    },
-    {
-      id: 2,
-      projectName: 'E-Shop Platform',
-      domain: 'eCommerce',
-      serviceManager: 'Ankit',
-      startDate: '2024-02-15',
-      endDate: '2024-12-15',
-      selectedSkills: ['Java', 'Python']
-    },
-    {
-      id: 1,
-      projectName: 'Legacy App Migration',
-      domain: 'Legacy Modernization',
-      serviceManager: 'Rudradatt',
-      startDate: '2024-01-01',
-      endDate: '2024-06-01',
-      selectedSkills: ['.NET', 'Angular']
-    },
-    {
-      id: 2,
-      projectName: 'E-Shop Platform',
-      domain: 'eCommerce',
-      serviceManager: 'Ankit',
-      startDate: '2024-02-15',
-      endDate: '2024-12-15',
-      selectedSkills: ['Java', 'Python']
-    },
-    {
-      id: 1,
-      projectName: 'Legacy App Migration',
-      domain: 'Legacy Modernization',
-      serviceManager: 'Rudradatt',
-      startDate: '2024-01-01',
-      endDate: '2024-06-01',
-      selectedSkills: ['.NET', 'Angular']
-    },
-    {
-      id: 2,
-      projectName: 'E-Shop Platform',
-      domain: 'eCommerce',
-      serviceManager: 'Ankit',
-      startDate: '2024-02-15',
-      endDate: '2024-12-15',
-      selectedSkills: ['Java', 'Python']
-    },
-    {
-      id: 1,
-      projectName: 'Legacy App Migration',
-      domain: 'Legacy Modernization',
-      serviceManager: 'Rudradatt',
-      startDate: '2024-01-01',
-      endDate: '2024-06-01',
-      selectedSkills: ['.NET', 'Angular']
-    },
-    {
-      id: 2,
-      projectName: 'E-Shop Platform',
-      domain: 'eCommerce',
-      serviceManager: 'Ankit',
-      startDate: '2024-02-15',
-      endDate: '2024-12-15',
-      selectedSkills: ['Java', 'Python']
-    }
-  ];
+  constructor(private projectService: Projectservice) {}
+  projects: ProjectDto[] = [];
 
-  // Logic remains for Delete, Filtering, and Pagination
+  ngOnInit() {
+    this.loadProjects();
+  }
+
   onDelete(id: number) {
-    if (confirm('Are you sure you want to delete this project?')) {
-      this.projects = this.projects.filter(p => p.id !== id);
+    if (confirm('Are you sure?')) {
+      this.projectService.deleteProject(id).subscribe(() => {
+        this.loadProjects(); // Refresh the list after delete
+      });
     }
   }
+
+  loadProjects() {
+    this.projectService.getProjects().subscribe({
+      next: (data) => this.projects = data,
+      error: (err) => console.error('Failed to load projects', err)
+    });
+  }
+
+  // Logic remains for Delete, Filtering, and Pagination
+  
 
   get filteredProjects() {
     return this.projects.filter(p => 
