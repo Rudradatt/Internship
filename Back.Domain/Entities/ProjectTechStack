@@ -1,0 +1,21 @@
+namespace ResourcingPlanner.Domain.Entities;
+public class ProjectTechStack : BaseEntity
+    {
+        [Key]
+        [Display(Name = "Mapping ID")]
+        public int ProjectTechStackId { get; set; }
+
+        [Required]
+        [Display(Name = "Project")]
+        public int ProjectId { get; set; }
+
+        [Required]
+        [Display(Name = "Technology")]
+        public int TechStackId { get; set; }
+
+        [Display(Name = "Project")]
+        public ProjectDetails Project { get; set; }
+
+        [Display(Name = "Technology")]
+        public TechStack TechStack { get; set; }
+    }
