@@ -51,6 +51,7 @@ namespace ResourcingPlanner.Infrastructure.Persistence
             project.ServiceManagerId = updatedProject.ServiceManagerId;
             project.StartDate = updatedProject.StartDate;
             project.EndDate = updatedProject.EndDate;
+            project.ProjectType = updatedProject.ProjectType;
 
             await _context.SaveChangesAsync();
         }
