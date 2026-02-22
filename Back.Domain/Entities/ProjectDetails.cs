@@ -1,0 +1,158 @@
+    // namespace ResourcingPlanner.Domain.Entities;
+    // public class ProjectDetails : BaseEntity
+    // {
+    //     [Key]
+    //     [Display(Name = "Project ID")]
+    //     public int ProjectId { get; set; }
+
+    //     [Required]
+    //     [MaxLength(40)]
+    //     [Display(Name = "Project Name")]
+    //     public string ProjectName { get; set; } = "";
+
+    //     [Required]
+    //     [MaxLength(10)]
+    //     [Display(Name = "Project Short Name")]
+    //     public string ProjectShortName { get; set; } = "";
+
+    //     [Required]
+    //     [MaxLength(100)]
+    //     [Display(Name = "Domain")]
+    //     public string DomainName { get; set; } = "";
+
+    //     [Required]
+    //     [MaxLength(50)]
+    //     [Display(Name = "Department")]
+    //     public string Department { get; set; } = "";
+
+    //     [Required]
+    //     [Display(Name = "Delivery Lead")]
+    //     public int DeliveryLeadId { get; set; }
+
+    //     [ForeignKey(nameof(DeliveryLeadId))]
+    //     public UserDetails? DeliveryLead { get; set; }
+
+    //     [Required]
+    //     [Display(Name = "Service Manager")]
+    //     public int ServiceManagerId { get; set; }
+
+    //     [ForeignKey(nameof(ServiceManagerId))]
+    //     public UserDetails? ServiceManager { get; set; }
+        
+        
+    //     [Required]
+    //     [Display(Name = "Project Start Date")]
+    //     public DateOnly StartDate { get; set; }
+
+    //     [Required]
+    //     [Display(Name = "Project End Date")]
+    //     public DateOnly EndDate { get; set; }
+
+        
+    //     [Required]
+    //     [Display(Name = "Billing Start Date")]
+    //     public DateOnly BillingStartDate { get; set; }
+
+    //     [Required]
+    //     [Display(Name = "Billing End Date")]
+    //     public DateOnly BillingEndDate { get; set; }
+
+        
+    //     [Required]
+    //     [MaxLength(100)]
+    //     [Display(Name = "Client Name")]
+    //     public string ClientName { get; set; } = "";
+
+    //     [Display(Name = "Technology Stack")]
+    //     public ICollection<ProjectTechStack> ProjectTechStacks { get; set; }
+    //         = new List<ProjectTechStack>();
+
+    //     [Required]
+    //      public bool IsActive { get; set; } = true;  
+
+    //      public void Deactivate()
+    //     {
+    //         IsActive = false;
+    //     }  
+    // }
+
+    namespace ResourcingPlanner.Domain.Entities;
+    public class ProjectDetails : BaseEntity
+    {
+        [Key]
+        [Display(Name = "Project ID")]
+        public int ProjectId { get; set; }
+
+        [Required]
+        [MaxLength(40)]
+        [Display(Name = "Project Name")]
+        public string ProjectName { get; set; } = "";
+
+        [Required]
+        [MaxLength(10)]
+        [Display(Name = "Project Short Name")]
+        public string ProjectShortName { get; set; } = "";
+
+        [Required]
+        [MaxLength(100)]
+        [Display(Name = "Domain")]
+        public string DomainName { get; set; } = "";
+
+        [Required]
+        [MaxLength(50)]
+        [Display(Name = "Department")]
+        public string Department { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Delivery Lead")]
+        public int DeliveryLeadId { get; set; }
+
+        [ForeignKey(nameof(DeliveryLeadId))]
+        public UserDetails? DeliveryLead { get; set; }
+
+        [Required]
+        [Display(Name = "Service Manager")]
+        public int ServiceManagerId { get; set; }
+
+        [ForeignKey(nameof(ServiceManagerId))]
+        public UserDetails? ServiceManager { get; set; }
+        
+        
+        [Required]
+        [Display(Name = "Project Start Date")]
+        public DateOnly ProjectStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "Project End Date")]
+        public DateOnly ProjectEndDate { get; set; }
+
+        [Required]
+        [Display(Name = "Project Type")]
+        public string ProjectType { get; set; } = "";
+        [Required]
+        [Display(Name = "Billing Start Date")]
+        public DateOnly BillingStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "Billing End Date")]
+        public DateOnly BillingEndDate { get; set; }
+
+        
+        [Required]
+        [MaxLength(100)]
+        [Display(Name = "Client Name")]
+        public string ClientName { get; set; } = "";
+
+        [Display(Name = "Technology Stack")]
+        public ICollection<ProjectTechStack> ProjectTechStacks { get; set; }
+            = new List<ProjectTechStack>();
+
+        [Required]
+         public bool IsActive { get; set; } = true;  
+
+         public void Deactivate()
+        {
+            IsActive = false;
+        }  
+    }
+
