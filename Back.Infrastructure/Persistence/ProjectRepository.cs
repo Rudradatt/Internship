@@ -45,13 +45,17 @@ namespace ResourcingPlanner.Infrastructure.Persistence
             project.ProjectName = updatedProject.ProjectName;
             project.ProjectShortName = updatedProject.ProjectShortName;
             project.ClientName = updatedProject.ClientName;
-            project.DomainId = updatedProject.DomainId;
+            project.ProjectType = updatedProject.ProjectType,
+            project.DomainName = updatedProject.DomainName;
             project.DepartmentId = updatedProject.DepartmentId;
             project.DeliveryLeadId = updatedProject.DeliveryLeadId;
             project.ServiceManagerId = updatedProject.ServiceManagerId;
-            project.StartDate = updatedProject.StartDate;
-            project.EndDate = updatedProject.EndDate;
+            project.ProjectStartDate = updatedProject.ProjectStartDate;
+            project.ProjectEndDate = updatedProject.ProjectEndDate;
+            project.BillingStartDate = updatedProject.BillingStartDate;
+            project.BillingEndDate = updatedProject.BillingEndDate;
             project.ProjectType = updatedProject.ProjectType;
+
 
             await _context.SaveChangesAsync();
         }
