@@ -7,7 +7,7 @@ namespace ResourcingPlanner.Application.DTOs.Project
         string DomainName,
         string Department,
         string ClientName,
-
+        string ProjectType,
         int DeliveryLeadId,
         int ServiceManagerId,
 
@@ -23,3 +23,4 @@ namespace ResourcingPlanner.Application.DTOs.Project
         DateTime? ModifiedAt
     );
 }
+
