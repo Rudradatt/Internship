@@ -277,7 +277,7 @@ namespace ResourcingPlanner.Application.Services
                 project.DomainName = request.DomainName;
                 project.Department = request.Department;
                 project.ClientName = request.ClientName;
-                ProjectType = request.ProjectType,
+                project.ProjectType = request.ProjectType,
                 project.DeliveryLeadId = request.DeliveryLeadId;
                 project.ServiceManagerId = request.ServiceManagerId;
 
@@ -391,4 +391,5 @@ namespace ResourcingPlanner.Application.Services
         public Task<List<TechStack>> GetTechStacksAsync() => repository.GetTechStacksAsync();
     }
 }
+
 
