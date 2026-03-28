@@ -33,8 +33,10 @@ syncScroll(source: 'left' | 'right') {
   this.isSyncing = true;
 
   if (source === 'left') {
+    // left drives right vertically
     this.rightScroll.nativeElement.scrollTop = this.leftScroll.nativeElement.scrollTop;
   } else {
+    // right drives left vertically only
     this.leftScroll.nativeElement.scrollTop = this.rightScroll.nativeElement.scrollTop;
   }
 

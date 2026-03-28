@@ -25,8 +25,8 @@ body {
 .grid-wrapper {
   flex: 1;
   display: flex;
-  overflow: hidden; /* ✅ parent must not scroll */
-  min-height: 0;   /* ✅ critical for flex children to respect height */
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* ✅ LEFT PANEL - frozen like Excel */
@@ -36,11 +36,31 @@ body {
   max-width: 650px;
   flex-shrink: 0;
   overflow-y: auto;
-  overflow-x: auto;        /* ✅ changed from hidden to auto */
+  overflow-x: auto;
   border-right: 2px solid #ddd;
   position: relative;
   z-index: 2;
   box-shadow: 4px 0 6px rgba(0, 0, 0, 0.12);
+}
+
+/* ✅ Hide left panel scrollbar in Chrome/Safari */
+/* ✅ LEFT PANEL - hide vertical, show horizontal scrollbar */
+.left-panel::-webkit-scrollbar {
+  width: 0px;   /* ✅ hides vertical */
+  height: 8px;  /* ✅ shows horizontal */
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 .resource-table {
@@ -51,8 +71,8 @@ body {
 /* ✅ RIGHT PANEL - scrollable both ways */
 .right-panel {
   flex: 1;
-  overflow-x: auto;        /* ✅ horizontal scroll */
-  overflow-y: auto;        /* ✅ vertical scroll */
+  overflow-x: auto;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -102,8 +122,8 @@ td {
 
 .resource-table th,
 .resource-table td {
-  min-width: 240px;
-  width: 240px;
+  min-width: 250px;
+  width: 250px;
 }
 
 /* ALIGNMENT */
@@ -165,29 +185,21 @@ td {
   font-size: 12px;
 }
 
-/* SCROLLBAR - always visible like Excel */
-.left-panel::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;             /* ✅ changed from 0px to 8px */
-}
-
+/* ✅ ONLY right panel shows scrollbar */
 .right-panel::-webkit-scrollbar {
   width: 8px;
-  height: 8px; /* ✅ show both scrollbars on right */
+  height: 8px;
 }
 
-.left-panel::-webkit-scrollbar-track,
 .right-panel::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.left-panel::-webkit-scrollbar-thumb,
 .right-panel::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 4px;
 }
 
-.left-panel::-webkit-scrollbar-thumb:hover,
 .right-panel::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
@@ -263,9 +275,4 @@ td {
 .weekly-grid thead tr:nth-child(3) th,
 .resource-table thead tr:nth-child(3) th {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-/* ✅ Left panel drop shadow to show frozen pane effect */
-.left-panel {
-  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.12);
 }
