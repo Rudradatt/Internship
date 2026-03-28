@@ -1,298 +1,324 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-project-form',
   standalone: true, // Assuming standalone based on previous context
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,FormsModule],
   templateUrl: './project-form.html',
   styleUrl: './project-form.css',
 })
 export class ProjectForm implements OnInit {
-  private fb = inject(FormBuilder);
+  weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+  weekHeaders = ['12/01/2025', '12/08/2025', '12/15/2025', '12/22/2025', '12/15/2025', '12/22/2025'];
+  dates: string[] = [];
+  users: any[] = [];
 
-  @Input() editProjectData: any = null;
-  @Input() isReadOnly: boolean = false;
+  selectedCells: any[] = [];
+  isSelecting = false;
+  currentUser: string | null = null;
 
-  isEditMode = false;
-  selectedSkills: string[] = [];
-  isDropdownOpen = false;
+  showForm = false;
+  cellForm!: FormGroup;
 
-  projectForm = this.fb.group({
-    domain: ['', Validators.required],
-    projectName: ['', Validators.required],
-    projectShortName: ['', Validators.required],
-    projectType: ['Annuity', Validators.required],
-    clientName: ['', Validators.required],
-    deliveryLead: ['', Validators.required],
-    serviceManager: ['', Validators.required],
-    startDate: ['', [Validators.required, this.futureDateValidator()]],
-    endDate: ['', Validators.required]
-  }, { validators: this.dateRangeValidator });
+  @ViewChild('leftScroll') leftScroll!: ElementRef;
+@ViewChild('rightScroll') rightScroll!: ElementRef;
+
+private isSyncing = false;
+
+syncScroll(source: 'left' | 'right') {
+  if (this.isSyncing) return;
+
+  this.isSyncing = true;
+
+  if (source === 'left') {
+    this.rightScroll.nativeElement.scrollTop =
+      this.leftScroll.nativeElement.scrollTop;
+  } else {
+    this.leftScroll.nativeElement.scrollTop =
+      this.rightScroll.nativeElement.scrollTop;
+  }
+
+  setTimeout(() => (this.isSyncing = false), 0);
+}
+
+  resources = [
+    { name: 'Bhavi', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Female', date: '01/01/2026' },
+    { name: 'Devendra', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Male', date: '02/02/2026' },
+    { name: 'Rrudradaat', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '03/03/2026' },
+    { name: 'Rishabh', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Male', date: '04/04/2026' },
+    { name: 'Aarav', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '05/01/2026' },
+    { name: 'Meera', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '06/01/2026' },
+    { name: 'Vivaan', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '07/01/2026' },
+    { name: 'Diya', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '08/01/2026' },
+    { name: 'Krishna', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '09/01/2026' },
+    { name: 'Sanya', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '10/01/2026' },
+    { name: 'Aditya', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '11/01/2026' },
+    { name: 'Rhea', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '12/01/2026' },
+    { name: 'Ayaan', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '01/02/2026' },
+    { name: 'Inaaya', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '02/02/2026' },
+    { name: 'Shaurya', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '03/02/2026' },
+    { name: 'Kiara', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '04/02/2026' },
+    { name: 'Vivaan', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '05/02/2026' },
+    { name: 'Myra', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '06/02/2026' },
+    { name: 'Arjun', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '07/02/2026' },
+    { name: 'Sara', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '08/02/2026' },
+    { name: 'Reyansh', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '09/02/2026' },
+    { name: 'Diya', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '10/02/2026' },
+    { name: 'Krishna', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '11/02/2026' },
+    { name: 'Ananya', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '12/02/2026' },
+    { name: 'Advait', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '01/03/2026' },
+    { name: 'Saanvi', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '02/03/2026' },
+    { name: 'Dhruv', project: 'Amazon Resilience', role: 'STA', designation: 'Project Manager', gender: 'Male', date: '03/03/2026' },
+    { name: 'Aarohi', project: 'Hornels', role: 'CDL', designation: 'Service Manager', gender: 'Female', date: '04/03/2026' },
+    { name: 'Veer', project: 'ResourcePlanner', role: 'TA', designation: 'SE', gender: 'Male', date: '05/03/2026' },
+    { name: 'Kiara', project: 'Estimate', role: 'FATA', designation: 'Practice Lead', gender: 'Female', date: '06/03/2026' },
+  ];
+
+  allocationTypes = [
+    { name: 'Billable', short: 'BILL', color: 'rgb(146,208,80)', isLeave: false },
+    { name: 'Non-Billable', short: 'NB', color: 'rgb(0,176,80)', isLeave: false },
+    { name: 'Potential', short: 'POT', color: 'rgb(255,192,0)', isLeave: false },
+    { name: 'Internal', short: 'INT', color: 'rgb(0,176,240)', isLeave: false },
+    { name: 'Available', short: 'AVL', color: 'rgb(255,0,0)', isLeave: false },
+
+    { name: 'Holiday', short: 'HOL', color: 'rgb(112,48,160)', isLeave: true },
+    { name: 'Sick Leave', short: 'SICK', color: 'rgb(255,0,255)', isLeave: true },
+    { name: 'Bank Holiday', short: 'BANK HOL', color: 'rgb(244,177,131)', isLeave: true },
+    { name: 'Maternity Leave', short: 'MAT', color: 'rgb(174,170,170)', isLeave: true },
+  ];
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    // Check if we are in Edit or View mode
-    if (this.editProjectData) {
-      this.isEditMode = true;
-      this.fillFormForEdit(this.editProjectData);
-      
-      // Lock the form if it is Read Only mode
-      if (this.isReadOnly) {
-        this.projectForm.disable();
-      }
-    }
-  }
+    this.generateDates();
+    this.generateData();
 
-  // Helper to determine the header title in HTML
-  get formTitle(): string {
-    if (this.isReadOnly) return 'View Project Details';
-    return this.isEditMode ? 'Edit Project' : 'Create New Project';
-  }
-
-  fillFormForEdit(data: any) {
-    this.projectForm.patchValue({
-      domain: data.domain,
-      projectName: data.projectName,
-      projectShortName: data.projectShortName,
-      projectType: data.projectType,
-      clientName: data.clientName,
-      deliveryLead: data.deliveryLead,
-      serviceManager: data.serviceManager,
-      startDate: data.startDate,
-      endDate: data.endDate
+    this.cellForm = this.fb.group({
+      allocation1: [''],
+      allocation2: [''],
+      isHalfDay: [false],
     });
-
-    this.selectedSkills = [...(data.selectedSkills || [])];
   }
 
-  // --- Validators ---
+  generateDates() {
+    this.dates = ['12/01', '12/02', '12/03', '12/04', '12/05', '12/08', '12/09', '12/10', '12/11', '12/12', '12/15', '12/16', '12/17', '12/18', '12/19', '12/22', '12/23', '12/24', '12/25', '12/26'];
+  }
 
-  futureDateValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value || this.isReadOnly) return null; // Skip validation if read-only
-      const inputDate = new Date(control.value);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return inputDate < today ? { pastDate: true } : null;
+  generateData() {
+    const colors: any = {
+      Samsung: 'rgb(0,176,80)',
+      Emirates: 'rgb(0,176,240)',
+      Thor: 'rgb(146,208,80)',
+      Available: 'rgb(255,0,0)',
+      'Go IBIBO': 'rgb(255,192,0)',
+    };
+
+    this.users = [
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+      this.createUser('User 1', 'Samsung', colors),
+      this.createUser('User 2', 'Emirates', colors),
+      this.createUser('User 3', 'Thor', colors),
+      this.createUser('User 4', 'Available', colors),
+      this.createUser('User 5', 'Go IBIBO', colors),
+    ];
+  }
+
+  createUser(name: string, defaultValue: string, colors: any) {
+    return {
+      name,
+      data: this.dates.map((d) => ({
+        id: name + '-' + d,
+        value: defaultValue,
+        color: colors[defaultValue],
+
+        isHalfDay: false,
+        firstColor: null,
+        secondColor: null,
+      })),
     };
   }
 
-  dateRangeValidator(group: AbstractControl): ValidationErrors | null {
-    const start = group.get('startDate')?.value;
-    const end = group.get('endDate')?.value;
-    if (!start || !end) return null;
-    return new Date(end) <= new Date(start) ? { dateRangeInvalid: true } : null;
-  }
+  startSelection(event: MouseEvent, user: any, cell: any) {
+    if (event.detail === 2) return;
 
-  get isDateRangeInvalid(): boolean {
-    return this.projectForm.hasError('dateRangeInvalid') &&
-      (this.projectForm.get('endDate')?.touched || this.projectForm.get('endDate')?.dirty) || false;
-  }
+    if (this.isSelecting && user.name !== this.currentUser) return;
 
-  // --- UI Logic ---
+    this.isSelecting = true;
+    this.currentUser = user.name;
 
-  toggleDropdown() {
-    if (!this.isReadOnly) {
-      this.isDropdownOpen = !this.isDropdownOpen;
-    }
-  }
+    const index = this.selectedCells.findIndex((c) => c.id === cell.id);
 
-  toggleSkill(skill: string) {
-    if (this.isReadOnly) return;
-    const index = this.selectedSkills.indexOf(skill);
-    if (index > -1) this.selectedSkills.splice(index, 1);
-    else this.selectedSkills.push(skill);
-  }
-
-  isSkillSelected(skill: string): boolean {
-    return this.selectedSkills.includes(skill);
-  }
-
-  onSubmit() {
-    if (this.projectForm.valid && !this.isReadOnly) {
-      const payload = { 
-        ...this.projectForm.getRawValue(), // getRawValue includes disabled fields if needed
-        selectedSkills: this.selectedSkills 
-      };
-
-      if (this.isEditMode) {
-        console.log('Updating Project:', payload);
-      } else {
-        console.log('Creating Project:', payload);
-      }
+    if (index > -1) {
+      this.selectedCells.splice(index, 1);
     } else {
-      this.projectForm.markAllAsTouched();
+      this.selectedCells.push(cell);
     }
+  }
+
+  onHoverSelect(user: any, cell: any) {
+    if (!this.isSelecting) return;
+    if (user.name !== this.currentUser) return;
+
+    const index = this.selectedCells.findIndex((c) => c.id === cell.id);
+
+    if (index > -1) {
+      this.selectedCells.splice(index, 1);
+    } else {
+      this.selectedCells.push(cell);
+    }
+  }
+
+  endSelection() {
+    this.isSelecting = false;
+    this.currentUser = null;
+  }
+
+  isSelected(cell: any): boolean {
+    return this.selectedCells.some((c) => c.id === cell.id);
+  }
+
+  openForm() {
+    if (this.selectedCells.length === 0) return;
+
+    this.showForm = true;
+
+    const cell = this.selectedCells[0];
+
+    let allocation1 = null;
+    let allocation2 = null;
+    let isHalfDay = false;
+
+    if (cell.isHalfDay) {
+      allocation1 = this.allocationTypes.find((a) => a.color === cell.firstColor);
+      allocation2 = this.allocationTypes.find((a) => a.color === cell.secondColor);
+      isHalfDay = true;
+    } else {
+      allocation1 = this.allocationTypes.find((a) => a.color === cell.color);
+
+      if (!allocation1) {
+        allocation1 = this.allocationTypes.find((a) => a.short === cell.value);
+      }
+    }
+
+    this.cellForm.patchValue({
+      allocation1: allocation1 || this.allocationTypes[0],
+      allocation2: allocation2 || this.allocationTypes[1],
+      isHalfDay: isHalfDay,
+    });
+
+    document.body.classList.add('modal-open');
+  }
+
+  closeForm() {
+    this.showForm = false;
+    document.body.classList.remove('modal-open');
+  }
+
+  save() {
+    const val = this.cellForm.value;
+
+    this.selectedCells.forEach((cell) => {
+      if (val.isHalfDay) {
+        cell.isHalfDay = true;
+        cell.firstColor = val.allocation1.color;
+        cell.secondColor = val.allocation2.color;
+      } else {
+        const selectedType = val.allocation1;
+
+        cell.isHalfDay = false;
+        cell.firstColor = null;
+        cell.secondColor = null;
+
+        if (selectedType.isLeave) {
+          cell.value = selectedType.short;
+          cell.color = selectedType.color;
+        } else {
+          cell.color = selectedType.color;
+        }
+      }
+    });
+
+    this.selectedCells = [];
+    this.closeForm();
+  }
+
+  getCellStyle(cell: any) {
+    if (cell.isHalfDay) {
+      return {
+        background: `linear-gradient(
+        148deg,
+        ${cell.firstColor} 50%,
+        ${cell.secondColor} 50%
+      )`,
+      };
+    }
+    return { background: cell.color };
   }
 }
-
-// import { Component, inject, Input, OnInit } from '@angular/core';
-
-// import { CommonModule } from '@angular/common';
-
-// import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-// @Component({
-//   selector: 'app-project-form',
-//   imports: [CommonModule, ReactiveFormsModule],
-//   templateUrl: './project-form.html',
-//   styleUrl: './project-form.css',
-// })
-// export class ProjectForm implements OnInit{
-//   private fb = inject(FormBuilder);
-
-
-
-//   @Input() editProjectData: any = null; 
-//   @Input() isReadOnly: boolean = false;
-//   
-//   isEditMode = false;
-//   selectedSkills: string[] = [];
-
-
-
-//   projectForm = this.fb.group({
-
-//     domain: ['', Validators.required],
-
-//     projectName: ['', Validators.required],
-
-//     projectShortName: ['', Validators.required],
-
-//     projectType: ['Annuity', Validators.required],
-
-//     clientName: ['', Validators.required],
-
-//     deliveryLead: ['', Validators.required],
-
-//     serviceManager: ['', Validators.required],
-
-//     startDate: ['', [Validators.required, this.futureDateValidator()]], 
-
-//     endDate: ['', Validators.required]
-
-//   }, { validators: this.dateRangeValidator });
-
-
-
-//  
-
-//   futureDateValidator(): ValidatorFn {
-
-//     return (control: AbstractControl): ValidationErrors | null => {
-
-//       if (!control.value) return null; 
-
-//       const inputDate = new Date(control.value);
-
-//       const today = new Date();
-
-//       today.setHours(0, 0, 0, 0); 
-
-//       return inputDate < today ? { pastDate: true } : null;
-
-//     };
-
-//   }
-
-
-
-//   dateRangeValidator(group: AbstractControl): ValidationErrors | null {
-
-//     const start = group.get('startDate')?.value;
-
-//     const end = group.get('endDate')?.value;
-
-//     if (!start || !end) return null;
-
-//     return new Date(end) <= new Date(start) ? { dateRangeInvalid: true } : null;
-
-//   }
-
-
-
-//   get isDateRangeInvalid(): boolean {
-
-//     return this.projectForm.hasError('dateRangeInvalid') && 
-
-//            (this.projectForm.get('endDate')?.touched || this.projectForm.get('endDate')?.dirty) || false;
-
-//   }
-
-
-
-//   isDropdownOpen = false;
-
-//   toggleDropdown() {
-
-//     this.isDropdownOpen = !this.isDropdownOpen;
-
-//   }
-
-
-
-//   toggleSkill(skill: string) {
-
-//     const index = this.selectedSkills.indexOf(skill);
-
-//     if (index > -1) this.selectedSkills.splice(index, 1);
-
-//     else this.selectedSkills.push(skill);
-
-//   }
-
-
-
-//   isSkillSelected(skill: string): boolean {
-
-//     return this.selectedSkills.includes(skill);
-
-//   }
-
-//   ngOnInit() {
-//     // 2. Check if we are in Edit Mode
-//     if (this.editProjectData) {
-//       this.isEditMode = true;
-//       this.fillFormForEdit(this.editProjectData);
-//     if (this.isReadOnly) {
-//       this.projectForm.disable();  
-//     }
-//   }
-
-//   fillFormForEdit(data: any) {
-//     // 3. Patch the form values
-//     this.projectForm.patchValue({
-//       domain: data.domain,
-//       projectName: data.projectName,
-//       projectShortName: data.projectShortName,
-//       projectType: data.projectType,
-//       clientName: data.clientName,
-//       deliveryLead: data.deliveryLead,
-//       serviceManager: data.serviceManager,
-//       startDate: data.startDate,
-//       endDate: data.endDate
-//     });
-
-//     // 4. Handle skills separately since they are in a custom array
-//     this.selectedSkills = [...(data.selectedSkills || [])];
-//   }
-
-
-
-
-//   onSubmit() {
-//     if (this.projectForm.valid) {
-//       const payload = { ...this.projectForm.value, selectedSkills: this.selectedSkills };
-//       
-//       if (this.isEditMode) {
-//         console.log('Updating Project:', payload);
-//         // Call your update service here
-//       } else {
-//         console.log('Creating Project:', payload);
-//         // Call your create service here
-//       }
-//     } else {
-//       this.projectForm.markAllAsTouched();
-//     }
-//   }
-// }

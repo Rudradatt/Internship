@@ -1,333 +1,141 @@
-<div class="container p-4">
-  <div class="row mb-4">
-    <div class="col">
-      <h3 class="text-center">{{ formTitle }}</h3>
+
+<section class="dashboard-container">
+  <!-- 🔥 TOP SPACE -->
+  <div class="top-bar">
+    <h2>Dashboard</h2>
+  </div>
+
+  <!-- 🔥 MAIN GRID -->
+  <div class="grid-wrapper" (mouseup)="endSelection()">
+    <!-- 🔹 LEFT PANEL -->
+    <div class="left-panel" #leftScroll (scroll)="syncScroll('left')">
+      <table class="table table-bordered resource-table">
+        <thead>
+          <tr>
+            <th rowspan="3">Resource Name</th>
+            <th rowspan="3">Project</th>
+            <th rowspan="3">Role</th>
+            <th rowspan="3">Designation</th>
+            <th rowspan="3">Gender</th>
+            <th rowspan="3">Date</th>
+          </tr>
+          <tr class="ghost-row"></tr>
+          <tr class="ghost-row"></tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of resources">
+            <td>
+              <div>{{ item.name }}</div>
+            </td>
+            <td>
+              <div>{{ item.project }}</div>
+            </td>
+            <td>
+              <div>{{ item.role }}</div>
+            </td>
+            <td>
+              <div>{{ item.designation }}</div>
+            </td>
+            <td>
+              <div>{{ item.gender }}</div>
+            </td>
+            <td>
+              <div>{{ item.date }}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔹 RIGHT PANEL -->
+   <div class="right-panel" #rightScroll (scroll)="syncScroll('right')">
+  <table class="table table-bordered weekly-grid">
+          <thead>
+            <!-- Week -->
+            <tr>
+              <th *ngFor="let w of weekHeaders" colspan="5">
+                <div>{{ w }}</div>
+              </th>
+            </tr>
+
+            <!-- Days -->
+            <tr>
+              <ng-container *ngFor="let w of weekHeaders">
+                <th *ngFor="let d of weekDays">
+                  <div>{{ d }}</div>
+                </th>
+              </ng-container>
+            </tr>
+
+            <!-- Dates -->
+            <tr>
+              <th *ngFor="let date of dates">
+                <div class="date-text">{{ date }}</div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td
+                *ngFor="let cell of user.data"
+                (mousedown)="startSelection($event, user, cell)"
+                (mouseenter)="onHoverSelect(user, cell)"
+                (mouseup)="endSelection()"
+                (dblclick)="openForm()"
+                [ngClass]="{ 'bg-primary text-white': isSelected(cell) }"
+                [ngStyle]="!isSelected(cell) ? getCellStyle(cell) : {}"
+              >
+                <div>{{ cell.value }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+ 
     </div>
   </div>
 
-  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-    <div class="row g-4">
-      
-      <div class="col-md-12">
-        <label class="form-label">Domain</label>
-        <select class="form-select form-select-sm w-25" formControlName="domain">
-          <option value="" disabled selected>Select Domain</option>
-          <option>Legacy Modernization</option>
-          <option>Web</option>
-          <option>AI / ML Projects</option>
-          <option>eCommerce</option>
-        </select>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Project Name</label>
-        <input type="text" class="form-control form-control-sm w-50" 
-               formControlName="projectName" placeholder="Enter Project Name" 
-               [class.is-invalid]="(projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('projectName')?.hasError('required')">Project Name required.</div>       
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Project Short Name</label>
-        <input type="text" class="form-control form-control-sm w-25" formControlName="projectShortName">
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Project Type</label>
-        <div class="input-group input-group-sm w-25">
-          <select class="form-select" formControlName="projectType">
-            <option value="Annuity">Annuity</option>
-            <option value="Fixed Rate">Fixed Rate</option>
-            <option value="Time and Material">Time and Material</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Client Name</label>
-        <input type="text" class="form-control form-control-sm w-25" list="clientOptions" 
-               formControlName="clientName" [class.is-invalid]="(projectForm.get('clientName')?.invalid && projectForm.get('clientName')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('clientName')?.hasError('required')">Client Name required.</div>       
-        <datalist id="clientOptions">
-           <option value="PMC"></option>
-           <option value="AntManIntegration"></option>
-           <option value="AmazonWR"></option>
-           <Option value="Galaxy"></Option>
-           <Option value="Flipkart - Data Engineering"></Option>
-           <Option value="IronMan"></Option>
-           <Option value="Flash"></Option>
-           <Option value="Hulk"></Option>
-           <Option value="Captain"></Option>
-           <Option value="Emirates"></Option>
-           <Option value="AmazonAnnuity"></Option>
-           <Option value="AmazonWR-157(B)CO1"></Option>
-           <Option value="Myntra"></Option>
-           <Option value="Alembic"></Option>
-           <Option value="Mobile"></Option>
-           <Option value="Myntradot net"></Option>
-           <Option value="Black"></Option>
-           <Option value="Joey"></Option>
-           </datalist>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Delivery Lead</label>
-        <input type="text" class="form-control form-control-sm w-25" list="leadOptions" 
-               formControlName="deliveryLead" [class.is-invalid]="(projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('deliveryLead')?.hasError('required')">Delivery Lead Name required.</div>       
-        <datalist id="leadOptions">
-          <option value="Rudradatt"></option>
-          <option value="Devendra"></option>
-          <option value="Bhavi"></option>
-          <option value="Rishab"></option>
-          <option value="Ankit"></option>
-          <option value="Mohit"></option>
-          <option value="Yug"></option>
-          <option value="Nkaul"></option>
-          <option value="Tanmay"></option>
-          </datalist>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Service Manager</label>
-        <input type="text" class="form-control form-control-sm w-25" list="managerOptions" 
-               formControlName="serviceManager" [class.is-invalid]="(projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched)">
-        <div class="invalid-feedback" *ngIf="projectForm.get('serviceManager')?.hasError('required')">Service Manager Name required.</div>      
-        <datalist id="managerOptions">
-          <option value="Rudradatt"></option>
-          <option value="Devendra"></option>
-          <option value="Bhavi"></option>
-          <option value="Rishab"></option>
-          <option value="Ankit"></option>
-          <option value="Mohit"></option>
-          <option value="Yug"></option>
-          <option value="Nkaul"></option>
-          <option value="Tanmay"></option>
-          </datalist>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Start Date</label>
-        <input type="date" class="form-control form-control-sm w-25" formControlName="startDate"
-               [class.is-invalid]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
-        <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('required')">Required.</div>
-        <div class="invalid-feedback" *ngIf="projectForm.get('startDate')?.hasError('pastDate')">Cannot be in the past.</div>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">End Date</label>
-        <input type="date" class="form-control form-control-sm w-25" formControlName="endDate"
-               [class.is-invalid]="(projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched) || isDateRangeInvalid">
-        <div class="invalid-feedback" *ngIf="projectForm.get('endDate')?.hasError('required')">Required.</div>
-        <div class="text-danger small mt-1" *ngIf="isDateRangeInvalid">End Date must be after Start Date.</div>
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label">Skills Required</label>
-        <div class="dropdown">
-          <button class="btn btn-outline-primary w-25 d-flex justify-content-between align-items-center"
-                  type="button" 
-                  (click)="toggleDropdown()"
-                  [disabled]="isReadOnly"> <span>Select Skills ({{selectedSkills.length}})</span>
-            <span class="dropdown-toggle" [class.show]="isDropdownOpen"></span>
-          </button>
-          
-          <ul class="dropdown-menu p-2 w-25" 
-              [class.show]="isDropdownOpen"
-              [style.display]="isDropdownOpen ? 'block' : 'none'">
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
-                       [checked]="isSkillSelected('.NET')" 
-                       (change)="toggleSkill('.NET')"
-                       [disabled]="isReadOnly"> <label class="form-check-label">.NET</label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
-                       [checked]="isSkillSelected('Angular')" 
-                       (change)="toggleSkill('Angular')"
-                       [disabled]="isReadOnly">
-                <label class="form-check-label">Angular</label>
-              </div>
-            </li>
-            </ul>
-        </div>
-        
-        <div class="mt-2">
-          <span *ngFor="let skill of selectedSkills" class="badge bg-primary me-1 mb-1">{{ skill }}</span>
-        </div>
-      </div>
-
-      <div class="col-12 d-flex justify-content-center mt-4">
-        <button *ngIf="!isReadOnly" type="submit" class="btn btn-primary px-5" [disabled]="projectForm.invalid">
-          {{ isEditMode ? 'Update Project' : 'Submit Project' }}
-        </button>
-
-        <button *ngIf="isReadOnly" type="button" class="btn btn-secondary px-5" (click)="isDropdownOpen = false">
-          Back to List
-        </button>
-      </div>
-
-    </div>
-  </form>
-</div>
-
-
-<!-- 
-<div class="container p-4">
-<h3 class="text-center">
-  {{ isEditMode ? 'Edit Project' : 'Create New Project' }}
-</h3>
-
-  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Domain</label>
-      <div class="col-md-6">
-        <select class="form-select form-select-sm" formControlName="domain">
-          <option value="" disabled>Select Domain</option>
-          <option>Legacy Modernization</option>
-          <option>Web</option>
-          <option>AI / ML Projects</option>
-          <option>eCommerce</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Project Name</label>
-      <div class="col-md-6">
-        <input type="text"
-               class="form-control form-control-sm"
-               formControlName="projectName"
-               placeholder="Enter Project Name"
-               [class.is-invalid]="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
-        <div class="invalid-feedback">Project Name required.</div>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Project Short Name</label>
-      <div class="col-md-4">
-        <input type="text"
-               class="form-control form-control-sm"
-               formControlName="projectShortName">
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Project Type</label>
-      <div class="col-md-4">
-        <select class="form-select form-select-sm" formControlName="projectType">
-          <option>Annuity</option>
-          <option>Fixed Rate</option>
-          <option>Time and Material</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Client Name</label>
-      <div class="col-md-4">
-        <input type="text"
-               class="form-control form-control-sm"
-               list="clientOptions"
-               formControlName="clientName"
-               [class.is-invalid]="projectForm.get('clientName')?.invalid && projectForm.get('clientName')?.touched">
-        <div class="invalid-feedback">Client Name required.</div>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Delivery Lead</label>
-      <div class="col-md-4">
-        <input type="text"
-               class="form-control form-control-sm"
-               list="leadOptions"
-               formControlName="deliveryLead"
-               [class.is-invalid]="projectForm.get('deliveryLead')?.invalid && projectForm.get('deliveryLead')?.touched">
-        <div class="invalid-feedback">Delivery Lead required.</div>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Service Manager</label>
-      <div class="col-md-4">
-        <input type="text"
-               class="form-control form-control-sm"
-               list="managerOptions"
-               formControlName="serviceManager"
-               [class.is-invalid]="projectForm.get('serviceManager')?.invalid && projectForm.get('serviceManager')?.touched">
-        <div class="invalid-feedback">Service Manager required.</div>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">Start Date</label>
-      <div class="col-md-4">
-        <input type="date"
-               class="form-control form-control-sm"
-               formControlName="startDate"
-               [class.is-invalid]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
-        <div class="invalid-feedback">Invalid start date.</div>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <label class="col-md-3 col-form-label">End Date</label>
-      <div class="col-md-4">
-        <input type="date"
-               class="form-control form-control-sm"
-               formControlName="endDate"
-               [class.is-invalid]="isDateRangeInvalid">
-        <small class="text-danger" *ngIf="isDateRangeInvalid">
-          End Date must be after Start Date
-        </small>
-      </div>
-    </div>
-
-    <div class="row mb-3">
-      <label class="col-md-3 col-form-label">Skills Required</label>
-      <div class="col-md-6">
-
-        <button type="button"
-                class="btn btn-outline-primary w-100 d-flex justify-content-between"
-                (click)="toggleDropdown()">
-          Select Skills ({{ selectedSkills.length }})
-          <span class="dropdown-toggle"></span>
-        </button>
-
-        <div class="dropdown-menu show w-100 mt-1" *ngIf="isDropdownOpen">
-          <div class="form-check px-3" *ngFor="let skill of ['.NET','Angular','Java','Python']">
-            <input class="form-check-input"
-                   type="checkbox"
-                   [checked]="isSkillSelected(skill)"
-                   (change)="toggleSkill(skill)">
-            <label class="form-check-label">{{ skill }}</label>
-          </div>
+  <!-- 🔥 MODAL -->
+  <div *ngIf="showForm" class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5)">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Cells</h5>
+          <button class="btn-close" (click)="closeForm()"></button>
         </div>
 
-        <div class="mt-2">
-          <span *ngFor="let skill of selectedSkills"
-                class="badge bg-primary me-1">
-            {{ skill }}
-          </span>
+        <div class="modal-body">
+          <form [formGroup]="cellForm">
+            <div class="mb-2">
+              <label>First Half</label>
+              <select class="form-control" formControlName="allocation1">
+                <option *ngFor="let type of allocationTypes" [ngValue]="type">
+                  {{ type.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-2"><input type="checkbox" formControlName="isHalfDay" /> Half Day</div>
+
+            <div class="mb-2" *ngIf="cellForm.value.isHalfDay">
+              <label>Second Half</label>
+              <select class="form-control" formControlName="allocation2">
+                <option *ngFor="let type of allocationTypes" [ngValue]="type">
+                  {{ type.name }}
+                </option>
+              </select>
+            </div>
+          </form>
         </div>
 
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn btn-primary" (click)="save()">Save</button>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="row mt-4">
-      <div class="col text-center">
-        <button type="submit"
-                class="btn btn-primary px-5"
-                [disabled]="projectForm.invalid">
-          {{ isEditMode ? 'Update Project' : 'Submit Project' }}
-        </button>
-      </div>
-    </div>
-
-  </form>
-</div> -->
+  <div *ngIf="showForm" class="modal-backdrop fade show"></div>
+</section>
