@@ -30,15 +30,12 @@ private isSyncing = false;
 
 syncScroll(source: 'left' | 'right') {
   if (this.isSyncing) return;
-
   this.isSyncing = true;
 
   if (source === 'left') {
-    this.rightScroll.nativeElement.scrollTop =
-      this.leftScroll.nativeElement.scrollTop;
+    this.rightScroll.nativeElement.scrollTop = this.leftScroll.nativeElement.scrollTop;
   } else {
-    this.leftScroll.nativeElement.scrollTop =
-      this.rightScroll.nativeElement.scrollTop;
+    this.leftScroll.nativeElement.scrollTop = this.rightScroll.nativeElement.scrollTop;
   }
 
   setTimeout(() => (this.isSyncing = false), 0);

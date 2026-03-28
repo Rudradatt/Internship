@@ -9,6 +9,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* TOP BAR */
@@ -17,32 +18,41 @@ body {
   padding: 10px 20px;
   background: #fff;
   border-bottom: 2px solid #ddd;
+  flex-shrink: 0;
 }
 
-/* GRID */
+/* GRID WRAPPER */
 .grid-wrapper {
   flex: 1;
   display: flex;
-  overflow: hidden;
+  overflow: hidden; /* ✅ parent must not scroll */
+  min-height: 0;   /* ✅ critical for flex children to respect height */
 }
 
-/* LEFT PANEL */
+/* ✅ LEFT PANEL - frozen like Excel */
 .left-panel {
   width: 650px;
   min-width: 650px;
+  max-width: 650px;
+  flex-shrink: 0;
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: auto;        /* ✅ changed from hidden to auto */
   border-right: 2px solid #ddd;
+  position: relative;
+  z-index: 2;
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.12);
 }
 
 .resource-table {
-  width: max-content;
+  width: 100%;
+  table-layout: fixed;
 }
 
-/* RIGHT PANEL */
+/* ✅ RIGHT PANEL - scrollable both ways */
 .right-panel {
   flex: 1;
-  overflow: auto;
+  overflow-x: auto;        /* ✅ horizontal scroll */
+  overflow-y: auto;        /* ✅ vertical scroll */
   position: relative;
 }
 
@@ -51,17 +61,11 @@ body {
   margin-bottom: 0 !important;
 }
 
-/* ✅ CRITICAL FIX: border-collapse breaks sticky in all browsers */
+/* ✅ CRITICAL: border-collapse breaks sticky in all browsers */
 table {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
-}
-
-/* HEADERS */
-.resource-table th,
-.weekly-grid th {
-  white-space: nowrap;
 }
 
 /* COMMON CELL STYLE */
@@ -71,7 +75,7 @@ td {
   padding: 0 !important;
   vertical-align: middle !important;
   box-sizing: border-box;
-  border: 1px solid #dee2e6; /* ✅ manual borders since border-collapse is removed */
+  border: 1px solid #dee2e6;
 }
 
 /* FORCE SAME HEIGHT EVERYWHERE */
@@ -80,7 +84,7 @@ td {
   height: 48px !important;
 }
 
-/* LEFT TABLE IMPROVEMENTS */
+/* LEFT TABLE */
 .resource-table th,
 .resource-table td {
   padding: 0 12px !important;
@@ -89,15 +93,17 @@ td {
   text-overflow: ellipsis;
 }
 
-/* COLUMN WIDTHS */
+/* COLUMN WIDTHS - LEFT */
 .resource-table th:first-child,
 .resource-table td:first-child {
-  min-width: 344px;
+  min-width: 160px;
+  width: 160px;
 }
 
 .resource-table th,
 .resource-table td {
-  min-width: 140px;
+  min-width: 240px;
+  width: 240px;
 }
 
 /* ALIGNMENT */
@@ -141,16 +147,17 @@ td {
   border: 1px solid transparent !important;
 }
 
-/* RIGHT GRID WIDTH */
+/* ✅ RIGHT GRID - fixed cell widths for Excel feel */
 .weekly-grid {
   width: max-content;
+  min-width: 100%;
 }
 
 .weekly-grid th,
 .weekly-grid td {
-  width: 70px;
-  min-width: 70px;
-  max-width: 70px;
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 /* DATE TEXT */
@@ -158,11 +165,31 @@ td {
   font-size: 12px;
 }
 
-/* SCROLLBAR */
-.left-panel::-webkit-scrollbar,
+/* SCROLLBAR - always visible like Excel */
+.left-panel::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;             /* ✅ changed from 0px to 8px */
+}
+
 .right-panel::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px; /* ✅ show both scrollbars on right */
+}
+
+.left-panel::-webkit-scrollbar-track,
+.right-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.left-panel::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover,
+.right-panel::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 /* HOVER EFFECT */
@@ -181,7 +208,7 @@ td {
   position: sticky;
   top: 0;
   z-index: 14;
-  background: #fff !important; /* ✅ !important ensures colored cells can't bleed through */
+  background: #fff !important;
   isolation: isolate;
 }
 
@@ -232,8 +259,13 @@ td {
   isolation: isolate;
 }
 
-/* ✅ Bottom shadow to visually separate header from body */
+/* ✅ Bottom shadow to separate header from body */
 .weekly-grid thead tr:nth-child(3) th,
 .resource-table thead tr:nth-child(3) th {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ✅ Left panel drop shadow to show frozen pane effect */
+.left-panel {
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.12);
 }
