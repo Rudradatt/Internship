@@ -4,7 +4,6 @@
   </div>
 
   <div class="grid-wrapper" (mouseup)="endSelection()">
-    <!-- LEFT PANEL -->
     <div class="left-panel" #leftScroll (scroll)="syncScroll('left')">
       <table class="table table-bordered resource-table">
         <thead>
@@ -21,12 +20,10 @@
         </thead>
 
         <tbody>
-          <!-- ✅ Top spacer - pushes rows down for scrolled offset -->
           <tr class="spacer-row" *ngIf="offsetY > 0" [style.height.px]="offsetY">
-  <td colspan="6"></td>
-</tr>
+            <td colspan="6"></td>
+          </tr>
 
-          <!-- ✅ Only visible rows rendered -->
           <tr *ngFor="let item of visibleResources; trackBy: trackByIndex">
             <td>
               <div>{{ item.name }}</div>
@@ -48,32 +45,32 @@
             </td>
           </tr>
 
-          <!-- ✅ Bottom spacer - fills remaining scroll height -->
-          <tr class="spacer-row" 
-  *ngIf="totalHeight - offsetY - visibleResources.length * rowHeight > 0"
-  [style.height.px]="totalHeight - offsetY - visibleResources.length * rowHeight">
-  <td colspan="6"></td>
-</tr>
+          <tr
+            class="spacer-row"
+            *ngIf="totalHeight - offsetY - visibleResources.length * rowHeight > 0"
+            [style.height.px]="totalHeight - offsetY - visibleResources.length * rowHeight"
+          >
+            <td colspan="6"></td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- RIGHT PANEL -->
     <div class="right-panel" #rightScroll (scroll)="syncScroll('right')">
       <table class="table table-bordered weekly-grid">
         <thead>
           <tr>
-            <th *ngFor="let w of weekHeaders" colspan="5">
+            <th *ngFor="let w of weekHeaders; let i = index" [attr.colspan]="weekColspans[i]">
               <div>{{ w }}</div>
             </th>
           </tr>
+
           <tr>
-            <ng-container *ngFor="let w of weekHeaders">
-              <th *ngFor="let d of weekDays">
-                <div>{{ d }}</div>
-              </th>
-            </ng-container>
+            <th *ngFor="let d of weekDays">
+              <div>{{ d }}</div>
+            </th>
           </tr>
+
           <tr>
             <th *ngFor="let date of dates">
               <div class="date-text">{{ date }}</div>
@@ -82,38 +79,36 @@
         </thead>
 
         <tbody>
-          <!-- ✅ Top spacer -->
           <tr class="spacer-row" *ngIf="offsetY > 0" [style.height.px]="offsetY">
-  <td [attr.colspan]="dates.length"></td>
-</tr>
+            <td [attr.colspan]="dates.length"></td>
+          </tr>
 
-          <!-- ✅ Only visible rows rendered -->
           <tr *ngFor="let user of visibleUsers; trackBy: trackByIndex">
-  <td
-    *ngFor="let cell of user.data; trackBy: trackByCell"
-    (mousedown)="startSelection($event, user, cell)"
-    (mouseenter)="onHoverSelect(user, cell)"
-    (mouseup)="endSelection()"
-    (dblclick)="openForm()"
-    [ngClass]="{ 'bg-primary text-white': isSelected(cell) }"
-    [ngStyle]="!isSelected(cell) ? getCellStyle(cell) : {}"
-  >
-    <div>{{ cell.value }}</div>
-  </td>
-</tr>
+            <td
+              *ngFor="let cell of user.data; trackBy: trackByCell"
+              (mousedown)="startSelection($event, user, cell)"
+              (mouseenter)="onHoverSelect(user, cell)"
+              (mouseup)="endSelection()"
+              (dblclick)="openForm()"
+              [ngClass]="{ 'bg-primary text-white': isSelected(cell) }"
+              [ngStyle]="!isSelected(cell) ? getCellStyle(cell) : {}"
+            >
+              <div>{{ cell.value }}</div>
+            </td>
+          </tr>
 
-          <!-- ✅ Bottom spacer -->
-          <tr class="spacer-row"
-  *ngIf="totalHeight - offsetY - visibleUsers.length * rowHeight > 0"
-  [style.height.px]="totalHeight - offsetY - visibleUsers.length * rowHeight">
-  <td [attr.colspan]="dates.length"></td>
-</tr>
+          <tr
+            class="spacer-row"
+            *ngIf="totalHeight - offsetY - visibleUsers.length * rowHeight > 0"
+            [style.height.px]="totalHeight - offsetY - visibleUsers.length * rowHeight"
+          >
+            <td [attr.colspan]="dates.length"></td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- MODAL unchanged -->
   <div
     *ngIf="showForm"
     class="modal fade show d-block"

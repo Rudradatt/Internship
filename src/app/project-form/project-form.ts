@@ -10,10 +10,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './project-form.css',
 })
 export class ProjectForm implements OnInit {
-  weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
-  weekHeaders = ['12/01/2025', '12/08/2025', '12/15/2025', '12/22/2025', '12/15/2025', '12/22/2025'];
-  dates: string[] = [];
-
+weekDays: string[] = [];
+weekHeaders: string[] = [];
+dates: string[] = [];
   allResources: any[] = [];
   allUsers: any[] = [];
 
@@ -21,7 +20,7 @@ export class ProjectForm implements OnInit {
   visibleUsers: any[] = [];
 
   rowHeight = 48;
-  visibleRowCount = 20;   // ✅ show enough rows to fill viewport
+  visibleRowCount = 20;
   bufferRows = 5;
   totalHeight = 0;
   offsetY = 0;
@@ -55,14 +54,12 @@ export class ProjectForm implements OnInit {
   }
 
   calculateVisibleRowCount() {
-    const topBarHeight = 100;      // your .top-bar height
-    const headerHeight = 144;      // 3 thead rows × 48px
+    const topBarHeight = 100;
+    const headerHeight = 144;
     const availableHeight = window.innerHeight - topBarHeight - headerHeight;
     this.visibleRowCount = Math.ceil(availableHeight / this.rowHeight) + 2;
-    // +2 extra safety rows
   }
 
-  // ✅ Single syncScroll - handles both sync AND virtualization
   syncScroll(source: 'left' | 'right') {
     if (this.isSyncing) return;
     this.isSyncing = true;
@@ -92,7 +89,6 @@ export class ProjectForm implements OnInit {
       firstIndex + this.visibleRowCount + this.bufferRows * 2
     );
 
-    // ✅ Only update DOM if window actually shifted
     if (firstIndex === this.lastFirstIndex) return;
     this.lastFirstIndex = firstIndex;
 
@@ -185,10 +181,81 @@ export class ProjectForm implements OnInit {
   ];
 
   generateDates() {
-    this.dates = ['12/01', '12/02', '12/03', '12/04', '12/05', '12/08', '12/09',
-      '12/10', '12/11', '12/12', '12/15', '12/16', '12/17', '12/18', '12/19',
-      '12/22', '12/23', '12/24', '12/25', '12/26'];
+  this.dates = [];
+  this.weekDays = [];
+  this.weekHeaders = [];
+
+  const today = new Date();
+  const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+  const weekCount = 6;
+
+  const dayOfWeek = today.getDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const currentWeekMonday = new Date(today);
+  currentWeekMonday.setDate(today.getDate() + diffToMonday);
+
+  let currentDate = new Date(today);
+  let weekHeaderAdded = false;
+
+  for (let w = 0; w < weekCount; w++) {
+    const weekStart = new Date(currentWeekMonday);
+    weekStart.setDate(currentWeekMonday.getDate() + w * 7);
+
+    let addedDaysInWeek = 0;
+
+    for (let d = 0; d < 5; d++) {
+      const loopDay = new Date(weekStart);
+      loopDay.setDate(weekStart.getDate() + d);
+
+      if (loopDay < today && loopDay.toDateString() !== today.toDateString()) continue;
+
+      if (!weekHeaderAdded || addedDaysInWeek === 0) {
+        if (addedDaysInWeek === 0) {
+          const mm = String(weekStart.getMonth() + 1).padStart(2, '0');
+          const dd = String(weekStart.getDate()).padStart(2, '0');
+          const yyyy = weekStart.getFullYear();
+          this.weekHeaders.push(`${mm}/${dd}/${yyyy}`);
+          weekHeaderAdded = true;
+        }
+      }
+
+      const dMm = String(loopDay.getMonth() + 1).padStart(2, '0');
+      const dDd = String(loopDay.getDate()).padStart(2, '0');
+      this.dates.push(`${dMm}/${dDd}`);
+      this.weekDays.push(dayNames[d]);
+      addedDaysInWeek++;
+    }
   }
+
+  this.recalculateWeekColspans();
+}
+
+weekColspans: number[] = [];
+
+recalculateWeekColspans() {
+  this.weekColspans = [];
+  const today = new Date();
+
+  const dayOfWeek = today.getDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const currentWeekMonday = new Date(today);
+  currentWeekMonday.setDate(today.getDate() + diffToMonday);
+
+  const weekCount = 6;
+  for (let w = 0; w < weekCount; w++) {
+    const weekStart = new Date(currentWeekMonday);
+    weekStart.setDate(currentWeekMonday.getDate() + w * 7);
+
+    let count = 0;
+    for (let d = 0; d < 5; d++) {
+      const loopDay = new Date(weekStart);
+      loopDay.setDate(weekStart.getDate() + d);
+      if (loopDay < today && loopDay.toDateString() !== today.toDateString()) continue;
+      count++;
+    }
+    if (count > 0) this.weekColspans.push(count);
+  }
+}
 
   generateData() {
     const colors: any = {
@@ -315,7 +382,7 @@ export class ProjectForm implements OnInit {
   }
 
   startSelection(event: MouseEvent, user: any, cell: any) {
-    if (event.detail >= 2) return;  // ✅ block both 2nd and any further clicks in dblclick
+    if (event.detail >= 2) return;
     if (this.isSelecting && user.name !== this.currentUser) return;
     this.isSelecting = true;
     this.currentUser = user.name;

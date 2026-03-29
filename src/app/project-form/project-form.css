@@ -12,7 +12,6 @@ body {
   overflow: hidden;
 }
 
-/* TOP BAR */
 .top-bar {
   height: 100px;
   padding: 10px 20px;
@@ -21,7 +20,6 @@ body {
   flex-shrink: 0;
 }
 
-/* GRID WRAPPER */
 .grid-wrapper {
   flex: 1;
   display: flex;
@@ -29,7 +27,6 @@ body {
   min-height: 0;
 }
 
-/* ✅ LEFT PANEL - frozen like Excel */
 .left-panel {
   width: 650px;
   min-width: 650px;
@@ -43,11 +40,9 @@ body {
   box-shadow: 4px 0 6px rgba(0, 0, 0, 0.12);
 }
 
-/* ✅ Hide left panel scrollbar in Chrome/Safari */
-/* ✅ LEFT PANEL - hide vertical, show horizontal scrollbar */
 .left-panel::-webkit-scrollbar {
-  width: 0px;   /* ✅ hides vertical */
-  height: 8px;  /* ✅ shows horizontal */
+  width: 0px;
+  height: 8px;
 }
 
 .left-panel::-webkit-scrollbar-track {
@@ -68,7 +63,6 @@ body {
   table-layout: fixed;
 }
 
-/* ✅ RIGHT PANEL - scrollable both ways */
 .right-panel {
   flex: 1;
   overflow-x: auto;
@@ -76,19 +70,16 @@ body {
   position: relative;
 }
 
-/* TABLE RESET */
 .table {
   margin-bottom: 0 !important;
 }
 
-/* ✅ CRITICAL: border-collapse breaks sticky in all browsers */
 table {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
 }
 
-/* COMMON CELL STYLE */
 th,
 td {
   height: 48px;
@@ -98,13 +89,11 @@ td {
   border: 1px solid #dee2e6;
 }
 
-/* FORCE SAME HEIGHT EVERYWHERE */
 .resource-table tr,
 .weekly-grid tr {
   height: 48px !important;
 }
 
-/* LEFT TABLE */
 .resource-table th,
 .resource-table td {
   padding: 0 12px !important;
@@ -113,7 +102,6 @@ td {
   text-overflow: ellipsis;
 }
 
-/* COLUMN WIDTHS - LEFT */
 .resource-table th:first-child,
 .resource-table td:first-child {
   min-width: 160px;
@@ -126,14 +114,12 @@ td {
   width: 250px;
 }
 
-/* ✅ Virtualization spacer rows */
 .spacer-row td {
   padding: 0 !important;
   border: none !important;
   background: transparent !important;
 }
 
-/* ALIGNMENT */
 .resource-table th {
   text-align: center;
 }
@@ -142,12 +128,10 @@ td {
   text-align: left;
 }
 
-/* ZEBRA ROWS */
 .resource-table tbody tr:nth-child(even) {
   background: #f9f9f9;
 }
 
-/* CENTER CONTENT FOR RIGHT GRID */
 .weekly-grid th > div,
 .weekly-grid td > div {
   display: flex;
@@ -156,7 +140,6 @@ td {
   height: 100%;
 }
 
-/* FORCE ROW HEIGHT MATCH */
 .resource-table tbody tr,
 .weekly-grid tbody tr {
   height: 48px !important;
@@ -167,14 +150,12 @@ td {
   height: 48px !important;
 }
 
-/* GHOST ROW */
 .ghost-row th {
   height: 48px;
   padding: 0 !important;
   border: 1px solid transparent !important;
 }
 
-/* ✅ RIGHT GRID - fixed cell widths for Excel feel */
 .weekly-grid {
   width: max-content;
   min-width: 100%;
@@ -187,12 +168,10 @@ td {
   max-width: 80px;
 }
 
-/* DATE TEXT */
 .date-text {
   font-size: 12px;
 }
 
-/* ✅ ONLY right panel shows scrollbar */
 .right-panel::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -211,12 +190,10 @@ td {
   background: #a8a8a8;
 }
 
-/* HOVER EFFECT */
 .resource-table tbody tr:hover {
   background: #eef3ff;
 }
 
-/* ✅ LEFT PANEL STICKY HEADERS */
 .resource-table thead {
   position: sticky;
   top: 0;
@@ -247,7 +224,6 @@ td {
   isolation: isolate;
 }
 
-/* ✅ RIGHT PANEL STICKY HEADERS */
 .weekly-grid thead {
   position: sticky;
   top: 0;
@@ -278,7 +254,6 @@ td {
   isolation: isolate;
 }
 
-/* ✅ Bottom shadow to separate header from body */
 .weekly-grid thead tr:nth-child(3) th,
 .resource-table thead tr:nth-child(3) th {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
