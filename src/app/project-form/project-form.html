@@ -1,13 +1,10 @@
-
 <section class="dashboard-container">
-  <!-- 🔥 TOP SPACE -->
   <div class="top-bar">
     <h2>Dashboard</h2>
   </div>
 
-  <!-- 🔥 MAIN GRID -->
   <div class="grid-wrapper" (mouseup)="endSelection()">
-    <!-- 🔹 LEFT PANEL -->
+    <!-- LEFT PANEL -->
     <div class="left-panel" #leftScroll (scroll)="syncScroll('left')">
       <table class="table table-bordered resource-table">
         <thead>
@@ -24,7 +21,13 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let item of resources">
+          <!-- ✅ Top spacer - pushes rows down for scrolled offset -->
+          <tr class="spacer-row" *ngIf="offsetY > 0" [style.height.px]="offsetY">
+  <td colspan="6"></td>
+</tr>
+
+          <!-- ✅ Only visible rows rendered -->
+          <tr *ngFor="let item of visibleResources; trackBy: trackByIndex">
             <td>
               <div>{{ item.name }}</div>
             </td>
@@ -44,67 +47,85 @@
               <div>{{ item.date }}</div>
             </td>
           </tr>
+
+          <!-- ✅ Bottom spacer - fills remaining scroll height -->
+          <tr class="spacer-row" 
+  *ngIf="totalHeight - offsetY - visibleResources.length * rowHeight > 0"
+  [style.height.px]="totalHeight - offsetY - visibleResources.length * rowHeight">
+  <td colspan="6"></td>
+</tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 🔹 RIGHT PANEL -->
-   <div class="right-panel" #rightScroll (scroll)="syncScroll('right')">
-  <table class="table table-bordered weekly-grid">
-          <thead>
-            <!-- Week -->
-            <tr>
-              <th *ngFor="let w of weekHeaders" colspan="5">
-                <div>{{ w }}</div>
+    <!-- RIGHT PANEL -->
+    <div class="right-panel" #rightScroll (scroll)="syncScroll('right')">
+      <table class="table table-bordered weekly-grid">
+        <thead>
+          <tr>
+            <th *ngFor="let w of weekHeaders" colspan="5">
+              <div>{{ w }}</div>
+            </th>
+          </tr>
+          <tr>
+            <ng-container *ngFor="let w of weekHeaders">
+              <th *ngFor="let d of weekDays">
+                <div>{{ d }}</div>
               </th>
-            </tr>
+            </ng-container>
+          </tr>
+          <tr>
+            <th *ngFor="let date of dates">
+              <div class="date-text">{{ date }}</div>
+            </th>
+          </tr>
+        </thead>
 
-            <!-- Days -->
-            <tr>
-              <ng-container *ngFor="let w of weekHeaders">
-                <th *ngFor="let d of weekDays">
-                  <div>{{ d }}</div>
-                </th>
-              </ng-container>
-            </tr>
+        <tbody>
+          <!-- ✅ Top spacer -->
+          <tr class="spacer-row" *ngIf="offsetY > 0" [style.height.px]="offsetY">
+  <td [attr.colspan]="dates.length"></td>
+</tr>
 
-            <!-- Dates -->
-            <tr>
-              <th *ngFor="let date of dates">
-                <div class="date-text">{{ date }}</div>
-              </th>
-            </tr>
-          </thead>
+          <!-- ✅ Only visible rows rendered -->
+          <tr *ngFor="let user of visibleUsers; trackBy: trackByIndex">
+  <td
+    *ngFor="let cell of user.data; trackBy: trackByCell"
+    (mousedown)="startSelection($event, user, cell)"
+    (mouseenter)="onHoverSelect(user, cell)"
+    (mouseup)="endSelection()"
+    (dblclick)="openForm()"
+    [ngClass]="{ 'bg-primary text-white': isSelected(cell) }"
+    [ngStyle]="!isSelected(cell) ? getCellStyle(cell) : {}"
+  >
+    <div>{{ cell.value }}</div>
+  </td>
+</tr>
 
-          <tbody>
-            <tr *ngFor="let user of users">
-              <td
-                *ngFor="let cell of user.data"
-                (mousedown)="startSelection($event, user, cell)"
-                (mouseenter)="onHoverSelect(user, cell)"
-                (mouseup)="endSelection()"
-                (dblclick)="openForm()"
-                [ngClass]="{ 'bg-primary text-white': isSelected(cell) }"
-                [ngStyle]="!isSelected(cell) ? getCellStyle(cell) : {}"
-              >
-                <div>{{ cell.value }}</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
- 
+          <!-- ✅ Bottom spacer -->
+          <tr class="spacer-row"
+  *ngIf="totalHeight - offsetY - visibleUsers.length * rowHeight > 0"
+  [style.height.px]="totalHeight - offsetY - visibleUsers.length * rowHeight">
+  <td [attr.colspan]="dates.length"></td>
+</tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- 🔥 MODAL -->
-  <div *ngIf="showForm" class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5)">
+  <!-- MODAL unchanged -->
+  <div
+    *ngIf="showForm"
+    class="modal fade show d-block"
+    tabindex="-1"
+    style="background: rgba(0, 0, 0, 0.5)"
+  >
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Edit Cells</h5>
           <button class="btn-close" (click)="closeForm()"></button>
         </div>
-
         <div class="modal-body">
           <form [formGroup]="cellForm">
             <div class="mb-2">
@@ -115,9 +136,7 @@
                 </option>
               </select>
             </div>
-
             <div class="mb-2"><input type="checkbox" formControlName="isHalfDay" /> Half Day</div>
-
             <div class="mb-2" *ngIf="cellForm.value.isHalfDay">
               <label>Second Half</label>
               <select class="form-control" formControlName="allocation2">
@@ -128,7 +147,6 @@
             </div>
           </form>
         </div>
-
         <div class="modal-footer">
           <button class="btn btn-secondary" (click)="closeForm()">Cancel</button>
           <button class="btn btn-primary" (click)="save()">Save</button>
@@ -136,6 +154,5 @@
       </div>
     </div>
   </div>
-
   <div *ngIf="showForm" class="modal-backdrop fade show"></div>
 </section>

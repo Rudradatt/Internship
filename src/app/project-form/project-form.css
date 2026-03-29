@@ -126,6 +126,13 @@ td {
   width: 250px;
 }
 
+/* ✅ Virtualization spacer rows */
+.spacer-row td {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
 /* ALIGNMENT */
 .resource-table th {
   text-align: center;
